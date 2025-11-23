@@ -8,10 +8,8 @@ import os
 from urllib.parse import urlparse
 import mysql.connector
 
-# Obtener la URL de la base de datos desde Render
-db_url = os.environ.get("DATABASE_URL")
+db_url = os.environ.get("DATABASE_URL")  # Variable de entorno en Railway
 
-# Parsear la URL
 url = urlparse(db_url)
 
 DB_CONFIG = {
@@ -19,11 +17,12 @@ DB_CONFIG = {
     "user": url.username,
     "password": url.password,
     "database": url.path[1:],  # quitar la barra inicial
-    "port": url.port or 3306 # Ajuste para Render: puerto por defecto 3306
+    "port": url.port
 }
 
 def obtener_conexion():
     return mysql.connector.connect(**DB_CONFIG)
+
 
 # Página principal
 @app.route('/')
