@@ -19,7 +19,7 @@ DB_CONFIG = {
     "user": url.username,
     "password": url.password,
     "database": url.path[1:],  # quitar la barra inicial
-    "port": url.port or 3306
+    "port": url.port or 3306 # Ajuste para Render: puerto por defecto 3306
 }
 
 def obtener_conexion():
