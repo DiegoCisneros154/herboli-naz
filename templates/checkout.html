@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Finalizar Compra - Medi</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .checkout-card {
+      max-width: 750px;
+      width: 100%;
+      border-radius: 15px;
+      overflow: hidden;
+      background-color: #fff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .checkout-header {
+      background: linear-gradient(90deg, #0d6efd, #2dce89);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .checkout-header i {
+      margin-right: 10px;
+    }
+
+    .list-group-item {
+      border: none;
+      border-bottom: 1px solid #eee;
+    }
+
+    .form-label {
+      font-weight: 600;
+    }
+
+    .btn-success {
+      background: linear-gradient(90deg, #2dce89, #0d6efd);
+      border: none;
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(90deg, #0b5ed7, #20c997);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(90deg, #6c757d, #adb5bd);
+      border: none;
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(90deg, #5a6268, #868e96);
+    }
+
+    hr {
+      border-color: #ddd;
+    }
+
+    /* Pequeña ayuda visual para inputs inválidos */
+    .is-invalid { border-color: #dc3545 !important; box-shadow: none; }
+    .small-muted { font-size: .85rem; color: #6c757d; }
+  </style>
+</head>
+<body>
+
+  <div class="checkout-card">
+    <div class="checkout-header">
+      <h3><i class="fas fa-credit-card"></i> Finalizar Compra</h3>
+    </div>
+
+    <div class="p-4">
+      <!-- RESUMEN DEL PEDIDO -->
+      <h5 class="mb-3"><i class="fas fa-box text-success"></i> Resumen del pedido</h5>
+      <ul class="list-group mb-4">
+        {% for producto in productos %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ producto.nombre }} (x{{ producto.cantidad }})
+          <span>${{ producto.total }}</span>
+        </li>
+        {% endfor %}
+        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+          Total:
+          <span class="text-success">${{ total }}</span>
+        </li>
+      </ul>
+
+      <!-- FORMULARIO DE COMPRA -->
+      <form id="checkoutForm" action="{{ url_for('procesar_checkout') }}" method="POST" novalidate>
+        
+        <!-- DATOS PERSONALES -->
+        <h5 class="mb-3"><i class="fas fa-user text-primary"></i> Datos personales</h5>
+
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre completo</label>
+          <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.usuario }}" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="correo" class="form-label">Correo electrónico</label>
+          <input type="email" class="form-control" id="correo" name="correo" value="{{ usuario.correo }}" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="direccion" class="form-label">Dirección</label>
+          <input type="text" class="form-control" id="direccion" name="direccion" value="{{ usuario.direccion }}" required>
+        </div>
+
+        <hr>
+
+        <!-- DATOS DE PAGO -->
+        <h5 class="mt-4 mb-3"><i class="fas fa-lock text-success"></i> Datos de pago</h5>
+        <div class="mb-3">
+          <label for="tarjeta" class="form-label">Número de tarjeta</label>
+          <input type="text" inputmode="numeric" autocomplete="cc-number" maxlength="19"
+                 class="form-control" id="tarjeta" name="tarjeta" placeholder="XXXX-XXXX-XXXX-XXXX" required>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="expiracion" class="form-label">Fecha de expiración</label>
+            <input type="text" inputmode="numeric" autocomplete="cc-exp" maxlength="5"
+                   class="form-control" id="expiracion" name="expiracion" placeholder="MM/AA" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="cvv" class="form-label">CVV</label>
+            <input type="text" inputmode="numeric" maxlength="3" autocomplete="cc-csc"
+                   class="form-control" id="cvv" name="cvv" placeholder="123" required>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <!-- BOTÓN DE REGRESAR -->
+          <a href="{{ url_for('ver_carrito') }}" class="btn btn-secondary px-4 py-2 rounded-pill">
+            <i class="fas fa-arrow-left"></i> Regresar
+          </a>
+
+          <!-- BOTÓN DE CONFIRMAR -->
+          <button id="submitBtn" type="submit" class="btn btn-success px-4 py-2 rounded-pill">
+            <i class="fas fa-check-circle"></i> Confirmar pedido
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Helper: elimina todo lo que no sean dígitos
+    function onlyDigits(str) {
+      return str.replace(/\D/g, '');
+    }
+
+    // TARJETA: formatea en XXXX-XXXX-XXXX-XXXX y limita a 16 dígitos
+    const tarjeta = document.getElementById('tarjeta');
+    tarjeta.addEventListener('input', (e) => {
+      const prev = tarjeta.value;
+      const digits = onlyDigits(prev).slice(0, 16); // máximo 16 dígitos
+      // agrupar cada 4 dígitos
+      const parts = digits.match(/.{1,4}/g);
+      tarjeta.value = parts ? parts.join('-') : '';
+    });
+    // prevenir pegar texto no válido en tarjeta
+    tarjeta.addEventListener('paste', (e) => {
+      const paste = (e.clipboardData || window.clipboardData).getData('text');
+      if (!/^\d+$/.test(onlyDigits(paste))) {
+        e.preventDefault();
+      }
+    });
+
+    // CVV: solo dígitos, máximo 3
+    const cvv = document.getElementById('cvv');
+    cvv.addEventListener('input', () => {
+      cvv.value = onlyDigits(cvv.value).slice(0, 3);
+    });
+    cvv.addEventListener('paste', (e) => {
+      const paste = (e.clipboardData || window.clipboardData).getData('text');
+      if (!/^\d+$/.test(onlyDigits(paste))) e.preventDefault();
+    });
+
+    // EXPIRACION: formato MM/AA con slash automático y validación simple de mes
+    const exp = document.getElementById('expiracion');
+    exp.addEventListener('input', (e) => {
+      let v = onlyDigits(exp.value).slice(0,4); // MMYY (4 dígitos)
+      if (v.length >= 3) {
+        // insertar slash entre 2 y resto: MM/AA
+        v = v.slice(0,2) + '/' + v.slice(2);
+      }
+      exp.value = v;
+      // validación del mes
+      const month = onlyDigits(v).slice(0,2);
+      if (month.length === 2) {
+        const m = parseInt(month, 10);
+        if (m < 1 || m > 12) {
+          exp.classList.add('is-invalid');
+        } else {
+          exp.classList.remove('is-invalid');
+        }
+      } else {
+        exp.classList.remove('is-invalid');
+      }
+    });
+    exp.addEventListener('paste', (e) => {
+      const paste = (e.clipboardData || window.clipboardData).getData('text');
+      if (!/^\d+$/.test(onlyDigits(paste))) e.preventDefault();
+    });
+
+    // Validación final en submit (cliente) — evita enviar si hay problemas obvios
+    const form = document.getElementById('checkoutForm');
+    form.addEventListener('submit', (e) => {
+      // quitar clases previas
+      [tarjeta, exp, cvv].forEach(el => el.classList.remove('is-invalid'));
+
+      const cardDigits = onlyDigits(tarjeta.value);
+      const expDigits = onlyDigits(exp.value);
+      const cvvDigits = onlyDigits(cvv.value);
+
+      let bad = false;
+      if (cardDigits.length !== 16) {
+        tarjeta.classList.add('is-invalid');
+        bad = true;
+      }
+      if (cvvDigits.length !== 3) {
+        cvv.classList.add('is-invalid');
+        bad = true;
+      }
+      if (expDigits.length !== 4) {
+        exp.classList.add('is-invalid');
+        bad = true;
+      } else {
+        const mm = parseInt(expDigits.slice(0,2), 10);
+        if (mm < 1 || mm > 12) {
+          exp.classList.add('is-invalid');
+          bad = true;
+        }
+      }
+
+      if (bad) {
+        e.preventDefault();
+        // opcional: enfoque al primer campo inválido
+        const firstInvalid = document.querySelector('.is-invalid');
+        if (firstInvalid) firstInvalid.focus();
+      } else {
+        // opcional: puedes limpiar el formato antes de enviar (enviar solo dígitos)
+        tarjeta.value = cardDigits;
+        // expiración en MM/AA (ya está con slash), dejamos como está
+      }
+    });
+  </script>
+
+</body>
+</html>

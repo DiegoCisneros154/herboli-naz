@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Proveedores</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+
+  <style>
+    body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+    .container { margin-top: 40px; }
+    .card { border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .table th { background-color: #2dce89; color: white; }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="text-center mb-4">👨‍🌾 Gestión de Proveedores</h1>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary mb-3">⬅️ Regresar</a>
+
+    <!-- Formulario agregar proveedor -->
+    <div class="card p-4 mb-4">
+      <h4>➕ Agregar Nuevo Proveedor</h4>
+
+      <form action="{{ url_for('agregar_proveedor') }}" method="POST" class="row g-3 needs-validation" novalidate>
+
+        <!-- Nombre -->
+        <div class="col-md-4">
+          <input type="text" name="nombre" class="form-control solo-letras"
+                 placeholder="Nombre del proveedor" required minlength="3" maxlength="50"
+                 pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+">
+          <div class="invalid-feedback">Ingrese un nombre válido (solo letras).</div>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="col-md-2">
+          <input type="text" name="telefono" class="form-control solo-numeros"
+                 placeholder="Teléfono" required minlength="7" maxlength="15"
+                 pattern="[0-9]{7,15}">
+          <div class="invalid-feedback">Ingrese un teléfono válido (solo números, 7–15 dígitos).</div>
+        </div>
+
+        <!-- Correo -->
+        <div class="col-md-3">
+          <input type="email" name="correo" class="form-control"
+                 placeholder="Correo electrónico" required
+                 pattern="^[\w\.-]+@[\w\.-]+\.\w{2,4}$">
+          <div class="invalid-feedback">Ingrese un correo válido.</div>
+        </div>
+
+        <!-- Producto -->
+        <div class="col-md-2">
+          <input type="text" name="producto" class="form-control solo-letras"
+                 placeholder="Producto que suministra" required minlength="3" maxlength="50">
+          <div class="invalid-feedback">Ingrese un producto válido (solo letras, mínimo 3 caracteres).</div>
+        </div>
+
+        <!-- Dirección -->
+        <div class="col-md-5">
+          <input type="text" name="direccion" class="form-control"
+                 placeholder="Dirección" required minlength="4" maxlength="100">
+          <div class="invalid-feedback">Ingrese una dirección válida.</div>
+        </div>
+
+        <!-- Calificación -->
+        <div class="col-md-1">
+          <input type="number" name="calificacion" class="form-control"
+                 placeholder="Calif." min="0" max="10" required>
+          <div class="invalid-feedback">Calificación entre 0 y 10.</div>
+        </div>
+
+        <!-- Notas -->
+        <div class="col-md-12">
+          <textarea name="notas" class="form-control mt-2" placeholder="Notas" maxlength="300"></textarea>
+          <div class="invalid-feedback">Máximo 300 caracteres.</div>
+        </div>
+
+        <div class="col-md-12 text-center mt-2">
+          <button type="submit" class="btn btn-success">Guardar Proveedor</button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Buscar proveedores -->
+    <input type="text" id="buscarProveedor" class="form-control mb-3" placeholder="Buscar proveedor...">
+
+    <!-- Tabla de proveedores -->
+    <table class="table table-striped table-hover align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Teléfono</th>
+          <th>Correo</th>
+          <th>Producto</th>
+          <th>Dirección</th>
+          <th>Calificación</th>
+          <th>Notas</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for p in proveedores %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.telefono }}</td>
+          <td>{{ p.correo }}</td>
+          <td>{{ p.producto }}</td>
+          <td>{{ p.direccion }}</td>
+          <td>{{ p.calificacion }}</td>
+          <td>{{ p.notas }}</td>
+          <td>
+            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editarProveedor{{ p.id }}">Editar</button>
+            <a href="{{ url_for('eliminar_proveedor', id=p.id) }}" class="btn btn-danger btn-sm"
+               onclick="return confirm('¿Eliminar proveedor?');">Eliminar</a>
+          </td>
+        </tr>
+
+        <!-- Modal Editar -->
+        <div class="modal fade" id="editarProveedor{{ p.id }}" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <form action="{{ url_for('editar_proveedor', id=p.id) }}" method="POST" class="needs-validation" novalidate>
+
+                <div class="modal-header">
+                  <h5 class="modal-title">Editar Proveedor</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                  <input type="text" name="nombre" value="{{ p.nombre }}" class="form-control solo-letras mb-2"
+                         required minlength="3" maxlength="50">
+                  <div class="invalid-feedback">Nombre inválido.</div>
+
+                  <input type="text" name="telefono" value="{{ p.telefono }}" class="form-control solo-numeros mb-2"
+                         required minlength="7" maxlength="15">
+                  <div class="invalid-feedback">Teléfono inválido.</div>
+
+                  <input type="email" name="correo" value="{{ p.correo }}" class="form-control mb-2"
+                         required pattern="^[\w\.-]+@[\w\.-]+\.\w{2,4}$">
+                  <div class="invalid-feedback">Correo inválido.</div>
+
+                  <input type="text" name="producto" value="{{ p.producto }}" class="form-control solo-letras mb-2"
+                         required minlength="3" maxlength="50">
+                  <div class="invalid-feedback">Producto inválido.</div>
+
+                  <input type="text" name="direccion" value="{{ p.direccion }}" class="form-control mb-2"
+                         required minlength="4" maxlength="100">
+                  <div class="invalid-feedback">Dirección inválida.</div>
+
+                  <input type="number" name="calificacion" value="{{ p.calificacion }}"
+                         class="form-control mb-2" min="0" max="10" required>
+                  <div class="invalid-feedback">Calificación inválida.</div>
+
+                  <textarea name="notas" class="form-control mb-2" maxlength="300">{{ p.notas }}</textarea>
+                  <div class="invalid-feedback">Máximo 300 caracteres.</div>
+
+                </div>
+
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success">Guardar cambios</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /* ============================
+       BÚSQUEDA EN TABLA
+    ============================= */
+    document.getElementById('buscarProveedor').addEventListener('input', function() {
+      const filtro = this.value.toLowerCase();
+      document.querySelectorAll('tbody tr').forEach(tr => {
+        tr.style.display = tr.innerText.toLowerCase().includes(filtro) ? '' : 'none';
+      });
+    });
+
+    /* ============================
+       VALIDACIÓN BOOTSTRAP
+    ============================= */
+    (() => {
+      const forms = document.querySelectorAll('.needs-validation');
+      forms.forEach(form => {
+        form.addEventListener('submit', e => {
+          if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        });
+      });
+    })();
+
+    /* ============================
+       BLOQUEAR NÚMEROS / LETRAS
+    ============================= */
+
+    // Solo números
+    document.querySelectorAll('.solo-numeros').forEach(input => {
+      input.addEventListener('input', () => {
+        input.value = input.value.replace(/[^0-9]/g, '');
+      });
+    });
+
+    // Solo letras
+    document.querySelectorAll('.solo-letras').forEach(input => {
+      input.addEventListener('input', () => {
+        input.value = input.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g, '');
+      });
+    });
+  </script>
+
+</body>
+</html>

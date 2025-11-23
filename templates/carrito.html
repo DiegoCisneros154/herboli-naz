@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrito de Compras</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3e0c7);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin-top: 60px;
+    }
+
+    .carrito-card {
+      background-color: #fff;
+      border-radius: 18px;
+      padding: 35px 40px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h3 {
+      font-weight: 700;
+      color: #2e4053;
+    }
+
+    .table thead {
+      background-color: #27ae60;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .table tbody tr {
+      transition: 0.2s;
+    }
+
+    .table tbody tr:hover {
+      background-color: #f5fdf6;
+      transform: scale(1.01);
+    }
+
+    .form-control {
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background-color: #2980b9;
+      border: none;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: #1f6695;
+      transform: scale(1.05);
+    }
+
+    .btn-danger {
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .btn-danger:hover {
+      transform: scale(1.05);
+    }
+
+    .total-section {
+      text-align: right;
+      margin-top: 25px;
+    }
+
+    .total-section h4 {
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .btn-success {
+      background-color: #27ae60;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 30px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn-success:hover {
+      background-color: #1e874b;
+      transform: scale(1.05);
+    }
+
+    .btn-outline-secondary {
+      border-radius: 50px;
+      padding: 12px 25px;
+      font-weight: 600;
+      color: #555;
+      border: 2px solid #bbb;
+      transition: 0.3s;
+    }
+
+    .btn-outline-secondary:hover {
+      background-color: #f2f2f2;
+      border-color: #999;
+      transform: scale(1.05);
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .empty-cart i {
+      font-size: 3rem;
+      color: #bdc3c7;
+      margin-bottom: 10px;
+    }
+
+    .empty-cart p {
+      font-size: 1.2rem;
+      color: #7f8c8d;
+    }
+
+    .btn-outline-primary {
+      border-radius: 50px;
+      padding: 12px 25px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn-outline-primary:hover {
+      background-color: #27ae60;
+      border-color: #27ae60;
+      color: white;
+      transform: scale(1.05);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="carrito-card">
+      <h3 class="text-center mb-4"><i class="fas fa-shopping-cart text-success"></i> Tu Carrito</h3>
+
+      {% if productos %}
+      <div class="table-responsive">
+        <table class="table align-middle text-center">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Cantidad</th>
+              <th>Total</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+           
+            {% set ns = namespace(total_general=0) %}
+            {% for producto in productos %}
+            {% set ns.total_general = ns.total_general + producto.total %}
+            <tr>
+              <td><i class="fas fa-leaf text-success me-2"></i>{{ producto.nombre }}</td>
+              <td>${{ producto.precio }}</td>
+              <td>
+                <form action="{{ url_for('actualizar_cantidad', id=producto.id) }}" method="POST" class="d-inline">
+                  <div class="d-flex justify-content-center align-items-center gap-2">
+                    <input type="number" name="cantidad" value="{{ producto.cantidad }}" min="1" class="form-control" style="width:80px;">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                      <i class="fas fa-sync-alt"></i>
+                    </button>
+                  </div>
+                </form>
+              </td>
+              <td><strong>${{ producto.total }}</strong></td>
+              <td>
+                <form action="{{ url_for('eliminar_del_carrito', id=producto.id) }}" method="POST" class="d-inline">
+                  <button type="submit" class="btn btn-sm btn-danger">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="total-section">
+        <h4>Total general: <span class="text-success">${{ ns.total_general }}</span></h4>
+      </div>
+
+      <div class="text-center mt-4">
+        <a href="{{ url_for('checkout') }}" class="btn btn-success me-2">
+          <i class="fas fa-credit-card"></i> Finalizar compra
+        </a>
+        <a href="{{ url_for('plantas') }}" class="btn btn-outline-secondary">
+          <i class="fas fa-arrow-left"></i> Seguir comprando
+        </a>
+      </div>
+
+      {% else %}
+      <div class="empty-cart">
+        <i class="fas fa-shopping-basket"></i>
+        <p>Tu carrito está vacío</p>
+        <a href="{{ url_for('plantas') }}" class="btn btn-outline-primary mt-3">
+          <i class="fas fa-seedling"></i> Ver productos
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Administración - Medi</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <style>
+    :root {
+      --negro: #111;
+      --gris-oscuro: #212529;
+      --gris-fondo: #f5f6fa;
+      --gris-texto: #343a40;
+      --gris-claro: #dee2e6;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--gris-fondo);
+      color: var(--gris-texto);
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: linear-gradient(90deg, #000, #333);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .navbar-brand {
+      font-weight: 600;
+      font-size: 1.3rem;
+    }
+    .navbar .nav-link, .navbar-brand {
+      color: #fff !important;
+    }
+
+    /* Botones modernos */
+    .btn-negro {
+      background-color: var(--negro);
+      border: none;
+      color: #fff;
+      border-radius: 30px;
+      padding: 12px 25px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn-negro:hover {
+      background-color: var(--gris-oscuro);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Tarjetas */
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+      transition: 0.3s;
+      background-color: #fff;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    h2, h4, h5 {
+      font-weight: 600;
+      color: #222;
+    }
+
+    /* Tablas modernas */
+    table {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    thead th {
+      background-color: var(--negro);
+      color: #fff;
+    }
+
+    /* Inputs */
+    .form-control {
+      border-radius: 10px;
+      border: 1px solid var(--gris-claro);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-control:focus {
+      border-color: var(--negro);
+      box-shadow: 0 0 5px rgba(0,0,0,0.4);
+    }
+
+    /* Secciones */
+    section {
+      padding-top: 40px;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--negro);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    /* Contenedor de botones principales */
+    .main-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .main-buttons a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .card-title {
+      border-bottom: 3px solid var(--negro);
+      display: inline-block;
+      padding-bottom: 5px;
+      margin-bottom: 20px;
+    }
+
+    .img-fluid {
+      border-radius: 10px;
+      border: 1px solid var(--gris-claro);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#"><i class="bi bi-gear-fill me-2"></i>Panel Admin</a>
+      <div>
+        <span class="text-white me-3"><i class="bi bi-person-circle me-1"></i> {{ usuario }}</span>
+        <a href="{{ url_for('index') }}" class="btn btn-light btn-sm me-2">🏠 Inicio</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <div class="container mt-5">
+    <h2 class="text-center mb-4"><i class="bi bi-speedometer2 me-2"></i>Panel de Administración</h2>
+
+    <!-- BOTONES PRINCIPALES -->
+    <div class="main-buttons">
+      <a href="{{ url_for('admin_compras') }}" class="btn-negro"><i class="bi bi-cart-check"></i> Compras</a>
+      <a href="#clientes" class="btn-negro"><i class="bi bi-people"></i> Clientes</a>
+      <a href="#productos" class="btn-negro"><i class="bi bi-flower3"></i> Productos</a>
+      <a href="{{ url_for('proveedores') }}" class="btn-negro"><i class="bi bi-truck"></i> Proveedores</a>
+    </div>
+
+    <!-- CLIENTES -->
+    <section id="clientes">
+      <div class="card p-4 mb-5">
+        <h4 class="text-center text-dark card-title"><i class="bi bi-person-lines-fill me-2"></i>Gestión de Clientes</h4>
+        <form id="clienteForm">
+          <div class="row g-3">
+            <div class="col-md-2">
+              <label class="form-label">ID Cliente</label>
+              <input type="text" id="idCliente" class="form-control"
+                     placeholder="Ej. 1"
+                     maxlength="10"
+                     oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Nombre</label>
+              <input type="text" id="nombre" class="form-control" placeholder="Nombre completo">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Dirección</label>
+              <input type="text" id="direccion" class="form-control" placeholder="Calle, número...">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Teléfono</label>
+              <input type="text" id="telefono" class="form-control"
+                     placeholder="Ej. 5551234567"
+                     maxlength="10"
+                     oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            </div>
+
+          <div class="text-center mt-4">
+            <button type="button" id="btnBuscarCliente" class="btn btn-info me-2"><i class="bi bi-search"></i> Buscar</button>
+            <button type="button" id="btnModificarCliente" class="btn btn-warning text-white me-2"><i class="bi bi-pencil-square"></i> Modificar</button>
+            <button type="button" id="btnEliminarCliente" class="btn btn-danger me-2"><i class="bi bi-trash"></i> Eliminar</button>
+            <button type="button" id="btnGuardarCliente" class="btn btn-dark"><i class="bi bi-save"></i> Guardar</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card p-4 shadow-sm">
+        <h5 class="text-center mb-3"><i class="bi bi-list-check me-2"></i>Lista de Clientes</h5>
+        <table class="table table-bordered table-striped align-middle text-center">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Dirección</th>
+              <th>Teléfono</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cliente in clientes %}
+            <tr>
+              <td>{{ cliente.id }}</td>
+              <td>{{ cliente.nombre }}</td>
+              <td>{{ cliente.direccion }}</td>
+              <td>{{ cliente.telefono }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PRODUCTOS -->
+    <section id="productos" class="mt-5">
+      <div class="card p-4">
+        <h4 class="text-center text-dark card-title"><i class="bi bi-flower1 me-2"></i>Gestión de Productos</h4>
+        <p class="text-center">Administra tu catálogo de plantas fácilmente.</p>
+
+        <div class="text-center mb-4">
+          <a href="{{ url_for('plantas') }}" class="btn btn-dark"><i class="bi bi-box-seam me-2"></i>Ver catálogo</a>
+        </div>
+
+        <hr>
+        <h5 class="text-center text-dark">🪴 Agregar Nueva Planta</h5>
+        <form method="post" action="{{ url_for('agregar_planta') }}" class="border rounded p-4 bg-light mb-5">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label>Nombre:</label>
+              <input type="text" name="nombre" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label>Descripción:</label>
+              <input type="text" name="descripcion" class="form-control" required>
+            </div>
+            <div class="col-md-2">
+              <label>Precio:</label>
+              <input type="number" name="precio" class="form-control" required>
+            </div>
+            <div class="col-md-3">
+              <label>Imagen:</label>
+              <input type="text" name="imagen" class="form-control" required placeholder="archivo.jpg">
+            </div>
+          </div>
+          <div class="text-end mt-3">
+            <button type="submit" class="btn btn-dark"><i class="bi bi-plus-circle"></i> Agregar Planta</button>
+          </div>
+        </form>
+
+        <hr>
+        <h5 class="text-center text-dark">🛠️ Editar / Eliminar Plantas Existentes</h5>
+
+        {% for planta in plantas %}
+        <form method="post" action="{{ url_for('administrar_plantas') }}" class="border rounded p-4 mb-4 bg-light">
+          <input type="hidden" name="id" value="{{ planta.id }}">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+              <label>Nombre:</label>
+              <input type="text" name="nombre" value="{{ planta.nombre }}" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label>Descripción:</label>
+              <input type="text" name="descripcion" value="{{ planta.descripcion }}" class="form-control">
+            </div>
+            <div class="col-md-2">
+              <label>Precio:</label>
+              <input type="number" name="precio" value="{{ planta.precio }}" class="form-control">
+            </div>
+            <div class="col-md-3">
+              <label>Imagen:</label>
+              <input type="text" name="imagen" value="{{ planta.imagen }}" class="form-control">
+            </div>
+          </div>
+          <div class="text-end mt-3">
+            <button type="submit" class="btn btn-dark"><i class="bi bi-save"></i> Guardar cambios</button>
+            <button type="button" class="btn btn-danger btnEliminarPlanta" data-id="{{ planta.id }}">
+              <i class="bi bi-trash"></i> Eliminar Planta
+            </button>
+          </div>
+        </form>
+    
+        <div class="text-center mb-4">
+          <img src="{{ url_for('static', filename='img/' + planta.imagen) }}" alt="{{ planta.nombre }}" class="img-fluid" style="max-width:200px;">
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    
+    <!-- SCRIPT ELIMINAR PLANTAS -->
+    <script>
+      document.querySelectorAll('.btnEliminarPlanta').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const plantaId = btn.getAttribute('data-id');
+          if (!confirm('¿Seguro que quieres eliminar esta planta?')) return;
+    
+          fetch('/planta/eliminar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: plantaId })
+          })
+          .then(res => res.json())
+          .then(resp => {
+            alert(resp.mensaje);
+            location.reload(); // recarga la página para actualizar la lista
+          })
+          .catch(() => alert('❌ Error al eliminar planta.'));
+        });
+      });
+    </script>
+
+ <script>  
+function getFormData() {
+    return {
+      idCliente: document.getElementById('idCliente').value.trim(),
+      nombre: document.getElementById('nombre').value.trim(),
+      direccion: document.getElementById('direccion').value.trim(),
+      telefono: document.getElementById('telefono').value.trim()
+    };
+  }
+
+  // BUSCAR CLIENTE
+  document.getElementById('btnBuscarCliente').addEventListener('click', () => {
+    const { idCliente } = getFormData();
+    if (!idCliente) return alert('⚠️ Ingresa un ID de cliente para buscar.');
+
+    fetch('/cliente/buscar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idCliente })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.nombre) {
+        document.getElementById('nombre').value = data.nombre;
+        document.getElementById('direccion').value = data.direccion;
+        document.getElementById('telefono').value = data.telefono;
+        alert('✅ Cliente encontrado correctamente');
+      } else {
+        alert('❌ Cliente no encontrado.');
+      }
+    })
+    .catch(() => alert('❌ Error al buscar cliente.'));
+  });
+
+  // GUARDAR CLIENTE
+  document.getElementById('btnGuardarCliente').addEventListener('click', () => {
+    const data = getFormData();
+    if (!data.nombre) return alert('⚠️ Ingresa el nombre del cliente.');
+
+    fetch('/cliente/guardar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(resp => {
+      if (resp.mensaje.includes('correctamente')) {
+        alert('✅ Cliente guardado correctamente');
+        document.getElementById('clienteForm').reset();
+      } else {
+        alert('❌ ' + resp.mensaje);
+      }
+    })
+    .catch(() => alert('❌ Error al guardar cliente.'));
+  });
+
+  // MODIFICAR CLIENTE
+  document.getElementById('btnModificarCliente').addEventListener('click', () => {
+    const data = getFormData();
+    if (!data.idCliente) return alert('⚠️ Ingresa un ID de cliente para modificar.');
+
+    fetch('/cliente/modificar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(resp => {
+      alert('✅ Cliente modificado correctamente');
+    })
+    .catch(() => alert('❌ Error al modificar cliente.'));
+  });
+
+  // ELIMINAR CLIENTE
+  document.getElementById('btnEliminarCliente').addEventListener('click', () => {
+    const { idCliente } = getFormData();
+    if (!idCliente) return alert('⚠️ Ingresa un ID de cliente para eliminar.');
+    if (!confirm('¿Seguro que quieres eliminar este cliente?')) return;
+
+    fetch('/cliente/eliminar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idCliente })
+    })
+    .then(res => res.json())
+    .then(resp => {
+      alert('✅ Cliente eliminado correctamente');
+      document.getElementById('clienteForm').reset();
+    })
+    .catch(() => alert('❌ Error al eliminar cliente.'));
+  });
+</script>
+
+</body>
+</html>

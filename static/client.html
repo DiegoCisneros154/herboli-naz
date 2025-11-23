@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Cliente - Medi</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <style>
+    body {
+      background-color: #6e84ce;
+    }
+    .dashboard-card {
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container dashboard-card">
+    <div class="card shadow">
+      <div class="card-header bg-success text-white">
+        <h4 class="mb-0">Bienvenido, {{ cliente.usuario }} 🌿</h4>
+      </div>
+      <div class="card-body">
+        <h5>Información personal</h5>
+        <ul class="list-group list-group-flush mb-3">
+          <li class="list-group-item"><strong>ID Cliente:</strong> {{ cliente.id }}</li>
+          <li class="list-group-item"><strong>Nombre de usuario:</strong> {{ cliente.usuario }}</li>
+          <li class="list-group-item"><strong>Dirección:</strong> {{ cliente.direccion or 'No registrada' }}</li>
+          <li class="list-group-item"><strong>Teléfono:</strong> {{ cliente.telefono or 'No registrado' }}</li>
+        </ul>
+
+        <h5>Acciones disponibles</h5>
+        <ul class="list-group list-group-flush mb-3">
+          <li class="list-group-item">
+            <a href="{{ url_for('plantas') }}">🌱 Ver catálogo de plantas</a>
+          </li>
+        </ul>
+
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar sesión</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

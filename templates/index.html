@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Herboli Naz - Vivero Natural</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+/* ===== ESTILO VIVERO MODERNO Y MINIMALISTA ===== */
+:root {
+  --verde: #4a7856;
+  --verde-claro: #9cc69b;
+  --beige: #f5f1e6;
+  --madera: #e6d8b8;
+  --blanco: #ffffff;
+  --texto: #2c2c2c;
+  --sombra: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --radius: 18px;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--beige);
+  color: var(--texto);
+  margin: 0;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  background: var(--blanco);
+  box-shadow: var(--sombra);
+  padding: 12px 0;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: var(--verde) !important;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-brand img {
+  height: 65px;
+  width: 65px;
+  border-radius: 50%;
+  border: 2px solid var(--verde);
+}
+
+.nav-link {
+  font-weight: 500;
+  color: var(--texto) !important;
+  transition: 0.3s;
+}
+
+.nav-link:hover {
+  color: var(--verde) !important;
+}
+
+/* ===== HERO ===== */
+.hero {
+  background: linear-gradient(rgba(74, 120, 86, 0.6), rgba(74, 120, 86, 0.6)),
+              url('{{ url_for("static", filename="images/vivero-bg.jpg") }}') center/cover no-repeat;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--blanco);
+  padding: 0 20px;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  animation: fadeInDown 1.2s ease;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 30px;
+  animation: fadeInUp 1.4s ease;
+}
+
+.btn-hero {
+  background: var(--blanco);
+  color: var(--verde);
+  border-radius: 50px;
+  padding: 14px 35px;
+  font-weight: 600;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: var(--sombra);
+}
+
+.btn-hero:hover {
+  background: var(--verde);
+  color: var(--blanco);
+  transform: translateY(-5px);
+}
+
+/* ===== BENEFICIOS ===== */
+.benefits {
+  background: var(--blanco);
+  padding: 80px 20px;
+  border-radius: 50px 50px 0 0;
+  margin-top: -60px;
+  box-shadow: var(--sombra);
+  position: relative;
+  z-index: 2;
+}
+
+.benefits h2 {
+  text-align: center;
+  font-weight: 700;
+  color: var(--verde);
+  font-size: 2.3rem;
+  margin-bottom: 10px;
+}
+
+.benefits p.subtitle {
+  text-align: center;
+  color: #555;
+  margin-bottom: 50px;
+}
+
+.card-benefit {
+  border: none;
+  border-radius: var(--radius);
+  background: var(--beige);
+  text-align: center;
+  padding: 30px 25px;
+  transition: all 0.3s ease;
+  box-shadow: var(--sombra);
+}
+
+.card-benefit:hover {
+  transform: translateY(-10px);
+  background: var(--verde-claro);
+  color: var(--blanco);
+}
+
+.card-benefit img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--verde);
+  color: var(--blanco);
+  text-align: center;
+  padding: 40px 10px;
+  font-size: 15px;
+  margin-top: 80px;
+  letter-spacing: 0.3px;
+}
+
+footer span {
+  color: var(--madera);
+  font-weight: 600;
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeInDown {
+  0% { opacity: 0; transform: translateY(-30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2.4rem; }
+  .hero p { font-size: 1rem; }
+  .card-benefit { margin-bottom: 25px; }
+}
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('index') }}">
+      <img src="{{ url_for('static', filename='images/logonaz1.jpg') }}" alt="Logo">
+      Herboli Naz
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav align-items-center">
+        {% if 'usuario' in session %}
+          <li class="nav-item me-3"><span class="nav-link">👋 {{ session['usuario'] }}</span></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('cliente_dashboard') }}">Cuenta</a></li>
+          {% if session['rol'] == 'admin' %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('configuracion') }}">⚙️ Configuración</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Salir</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Registrar</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Iniciar sesión</a></li>
+        {% endif %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('empresa') }}">Empresa</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <h1>🌿 Bienvenido a Herboli Naz</h1>
+    <p>Vivero natural donde la vida florece. Árboles, plantas y productos naturales para tu hogar y bienestar.</p>
+    <a href="{{ url_for('plantas') }}" class="btn btn-hero me-3">Explorar Catálogo</a>
+    {% if 'usuario' in session %}
+    <a href="{{ url_for('compras_realizadas') }}" class="btn btn-hero">Mis Compras</a>
+    {% endif %}
+  </div>
+</section>
+
+<!-- BENEFICIOS -->
+<section class="benefits container">
+  <h2>Nuestros Beneficios</h2>
+  <p class="subtitle">Cuidamos de ti y de la naturaleza 🌱</p>
+  <div class="row g-4 justify-content-center">
+    <div class="col-md-4">
+      <div class="card-benefit">
+        <img src="{{ url_for('static', filename='images/icon1.jpg') }}" alt="Natural">
+        <h5>Productos 100% Naturales</h5>
+        <p>Sin químicos, sin aditivos. Solo lo mejor de la tierra para ti.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-benefit">
+        <img src="{{ url_for('static', filename='images/icon2.jpg') }}" alt="Saludable">
+        <h5>Salud y Bienestar</h5>
+        <p>Mejora tu calidad de vida con productos naturales y sostenibles.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card-benefit">
+        <img src="{{ url_for('static', filename='images/icon3.jpg') }}" alt="Confianza">
+        <h5>Confianza Verde</h5>
+        <p>Más de 10 años cuidando de ti y del medio ambiente con calidad garantizada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  🌳 <span>Herboli Naz</span> — Cuidando la vida desde la raíz.  
+  <br>© 2025 | Todos los derechos reservados.
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

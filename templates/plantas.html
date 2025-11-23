@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Catálogo de Árboles - Medi</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+/* === ESTILO MODERNO - NATURE STYLE 2025 === */
+:root {
+  --verde-claro: #a8e6cf;
+  --verde: #38b000;
+  --verde-oscuro: #1a7431;
+  --beige: #f7fff7;
+  --blanco: #ffffff;
+  --gris: #222;
+  --sombra: 0 10px 25px rgba(0,0,0,0.1);
+  --vidrio: rgba(255, 255, 255, 0.8);
+  --borde-redondo: 18px;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: linear-gradient(180deg, #f0fdf4 0%, #e6f9ee 100%);
+  color: var(--gris);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* NAVBAR */
+.navbar {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  box-shadow: var(--sombra);
+  padding: 12px 0;
+}
+
+.navbar-brand {
+  color: var(--verde-oscuro) !important;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.navbar .btn {
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.navbar .btn-outline-light {
+  color: var(--verde-oscuro);
+  border-color: var(--verde-oscuro);
+}
+
+.navbar .btn-outline-light:hover {
+  background-color: var(--verde-oscuro);
+  color: var(--blanco);
+}
+
+/* ENCABEZADO */
+.catalog-header {
+  text-align: center;
+  padding: 80px 20px;
+  background: url("{{ url_for('static', filename='images/forest-banner.jpg') }}") center/cover no-repeat;
+  color: var(--blanco);
+  position: relative;
+}
+
+.catalog-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(2px);
+}
+
+.catalog-header h2,
+.catalog-header p {
+  position: relative;
+  z-index: 1;
+}
+
+.catalog-header h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.catalog-header p {
+  font-size: 1.2rem;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* SECCIÓN CATÁLOGO */
+.catalog-section {
+  padding: 60px 20px;
+}
+
+.catalog-section h3 {
+  text-align: center;
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--verde-oscuro);
+  margin-bottom: 50px;
+}
+
+/* TARJETAS */
+.card {
+  background: var(--vidrio);
+  backdrop-filter: blur(20px);
+  border: none;
+  border-radius: var(--borde-redondo);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  transition: all 0.35s ease;
+  transform: translateY(0);
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  color: var(--verde-oscuro);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.card-text {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.price-tag {
+  color: var(--verde);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+/* BOTÓN */
+.btn-success {
+  background: linear-gradient(90deg, var(--verde), var(--verde-oscuro));
+  border: none;
+  color: var(--blanco);
+  font-weight: 600;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-success:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(56,176,0,0.3);
+}
+
+/* FOOTER */
+footer {
+  background: var(--verde-oscuro);
+  color: var(--blanco);
+  text-align: center;
+  padding: 25px 10px;
+  font-size: 15px;
+  letter-spacing: 0.4px;
+  margin-top: 60px;
+}
+
+footer span {
+  color: var(--verde-claro);
+}
+
+/* ANIMACIONES */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  animation: fadeInUp 0.7s ease both;
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+  .catalog-header h2 { font-size: 2.3rem; }
+  .card-img-top { height: 180px; }
+}
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index') }}"> Inicio</a>
+      <div class="d-flex align-items-center">
+        {% if session.get('usuario') %}
+          <span class="me-3 fw-semibold text-success">👋 {{ session['usuario'] }}</span>
+          <a href="{{ url_for('ver_carrito') }}" class="btn btn-outline-light btn-sm me-2">
+            🛒 Ver carrito
+          </a>
+          <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Cerrar Sesion</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm">Iniciar sesión</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Encabezado -->
+  <div class="catalog-header">
+    <h2>Catálogo de Árboles y plantas 🌳</h2>
+    <p>Explora especies con propósito: ecológicas, ornamentales y medicinales. Cada árbol, una historia de vida.</p>
+  </div>
+
+  <!-- Catálogo -->
+  <div class="container catalog-section">
+    <h3>🌱 Descubre Nuestras Especies</h3>
+    <div class="row">
+      {% for planta in plantas %}
+      <div class="col-md-3 mb-4">
+        <div class="card h-100">
+          <img src="{{ url_for('static', filename='images/' ~ planta.imagen) }}" class="card-img-top" alt="{{ planta.nombre }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ planta.nombre }}</h5>
+            <p class="card-text">{{ planta.descripcion }}</p>
+            <div class="price-tag">${{ planta.precio }}</div>
+            <form action="{{ url_for('agregar_al_carrito') }}" method="post">
+              <input type="hidden" name="planta_id" value="{{ planta.id }}">
+              <input type="number" name="cantidad" value="1" min="1" class="form-control mb-2" style="width: 80px;">
+              <button type="submit" class="btn btn-success btn-sm w-100">Agregar al carrito</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    🌲 <span>Herbolia Naz</span> — Creciendo vida, cultivando futuro 🌎
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Cliente - Medi</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <style>
+  body {
+  background-color: #f4f6f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #212529; /* texto principal en negro */
+}
+
+.dashboard-card {
+  margin-top: 60px;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #2dce89;
+  color: #ffffff;
+  padding: 25px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.card-header h4 {
+  font-weight: 700;
+  margin: 0;
+  font-size: 24px;
+}
+
+.card-body {
+  padding: 35px;
+}
+
+.list-group-item {
+  background-color: #f8f9fa;
+  border: none;
+  padding: 14px 20px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  color: #212529; /* texto negro */
+}
+
+.list-group-item:hover {
+  background-color: #e2e6ea;
+}
+
+.list-group-item strong {
+  width: 180px;
+  display: inline-block;
+  font-weight: 600;
+  color: #212529; /* texto negro */
+}
+
+h5.text-secondary {
+  color: #212529 !important; /* texto negro */
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+a.text-dark {
+  color: #212529 !important; /* texto negro */
+  font-weight: 600;
+  text-decoration: none;
+}
+
+a.text-dark:hover {
+  text-decoration: underline;
+}
+
+.btn-group-custom {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.btn-outline-primary {
+  border-color: #2dce89;
+  color: #2dce89;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
+.btn-outline-primary:hover {
+  background-color: #2dce89;
+  color: #fff;
+}
+
+.btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.icon-label {
+  font-size: 18px;
+  margin-right: 10px;
+  color: #212529; /* íconos en negro */
+}
+  </style>
+</head>
+<body>
+
+  <div class="container dashboard-card">
+    <div class="card">
+      <div class="card-header">
+        <h4>Bienvenido, {{ cliente.usuario }}</h4>
+      </div>
+      <div class="card-body">
+        <p class="mb-4">Este es tu panel como cliente. Desde aquí puedes gestionar tu información y explorar nuestros productos.</p>
+
+        <!-- Información del cliente -->
+        <h5 class="text-secondary">Tu Información Personal</h5>
+        <ul class="list-group list-group-flush mb-4">
+          <li class="list-group-item"><strong>ID de Cliente:</strong> {{ cliente.id }}</li>
+          <li class="list-group-item"><strong>Nombre de usuario:</strong> {{ cliente.usuario }}</li>
+          <li class="list-group-item"><strong>Dirección:</strong> {{ cliente.direccion or 'No registrada' }}</li>
+          <li class="list-group-item"><strong>Teléfono:</strong> {{ cliente.telefono or 'No registrado' }}</li>
+        </ul>
+
+        <!-- Acciones disponibles -->
+        <h5 class="text-secondary">Acciones disponibles</h5>
+        <ul class="list-group list-group-flush mb-4">
+          <li class="list-group-item d-flex align-items-center">
+            <span class="icon-label text-success">🪴</span>
+            <a href="{{ url_for('plantas') }}" class="text-dark">Ver productos disponibles</a>
+          </li>
+          <li class="list-group-item d-flex align-items-center">
+            <span class="icon-label text-primary">✏️</span>
+            <a href="{{ url_for('editar_perfil') }}" class="text-dark">Editar mi perfil</a>
+          </li>
+          <li class="list-group-item d-flex align-items-center">
+            <span class="icon-label text-warning">💬</span>
+            <a href="{{ url_for('testimonios') }}" class="text-dark">Dejar o ver testimonios</a>
+          </li>
+        </ul>
+
+        <!-- Botones -->
+        <div class="btn-group-custom">
+          <a href="{{ url_for('index') }}" class="btn btn-outline-primary">🏠 Inicio</a>
+          <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Cerrar sesión</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

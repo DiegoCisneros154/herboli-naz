@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar sesión - EcoVivero</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom right, #e6f2e6, #d9ead3); /* verde claro con degradado */
+      color: #2d3a24;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      padding: 40px 35px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .login-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    h2 {
+      font-weight: 700;
+      margin-bottom: 25px;
+      color: #2e7d32; /* verde oscuro */
+    }
+
+    .icon {
+      font-size: 3.5rem;
+      color: #4caf50;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-weight: 500;
+      color: #3a3a3a;
+      text-align: left;
+      display: block;
+    }
+
+    .form-control {
+      background: #f4f9f4;
+      border: 1px solid #b3d9b3;
+      color: #2d3a24;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      background: #fff;
+      box-shadow: 0 0 8px #81c784;
+      outline: none;
+    }
+
+    .btn-primary {
+      background-color: #388e3c; /* verde bosque */
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      padding: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #2e7d32;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(56, 142, 60, 0.4);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      border: 2px solid #388e3c;
+      border-radius: 50px;
+      padding: 12px;
+      font-weight: 600;
+      color: #388e3c;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: #388e3c;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .alert {
+      border-radius: 10px;
+      background-color: #c62828;
+      border: none;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-card">
+    <i class="bi bi-tree icon"></i>
+    <h2>Iniciar sesión</h2>
+
+    <form method="POST" action="{{ url_for('login') }}">
+      <div class="form-group mb-3">
+        <label for="usuario">Usuario</label>
+        <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Ingresa tu usuario" required>
+      </div>
+      <div class="form-group mb-4">
+        <label for="password">Contraseña</label>
+        <input type="password" name="password" id="password" class="form-control" placeholder="********" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mb-3">
+        <i class="bi bi-box-arrow-in-right me-1"></i> Entrar
+      </button>
+
+      {% if error %}
+        <div class="alert text-center mt-2">{{ error }}</div>
+      {% endif %}
+
+      <a href="{{ url_for('index') }}" class="btn btn-secondary w-100">
+        <i class="bi bi-arrow-left"></i> Volver
+      </a>
+    </form>
+  </div>
+</body>
+</html>

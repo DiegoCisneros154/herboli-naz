@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Perfil</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #2dce89, #0d6efd);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #212529;
+    }
+  
+    @keyframes gradientAnimation {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+  
+    .form-container {
+      max-width: 600px;
+      margin: 80px auto;
+      background-color: #ffffff;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+  
+    h3 {
+      color: #2dce89;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+  
+    label {
+      font-weight: 600;
+      color: #2dce89;
+    }
+  
+    .form-control {
+      border-radius: 8px;
+      border: 1px solid #ced4da;
+      padding: 10px 15px;
+      font-size: 15px;
+    }
+  
+    .btn-group-custom {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 30px;
+    }
+  
+    .btn-success {
+      background-color: #2dce89;
+      border: none;
+      font-weight: 600;
+      color: #fff;
+    }
+  
+    .btn-success:hover {
+      background-color: #28b67a;
+    }
+  
+    .btn-outline-primary {
+      border-color: #2dce89;
+      color: #2dce89;
+      font-weight: 600;
+    }
+  
+    .btn-outline-primary:hover {
+      background-color: #2dce89;
+      color: #fff;
+    }
+  
+    .btn-secondary {
+      background-color: #6c757d;
+      border: none;
+      color: #fff;
+      font-weight: 600;
+    }
+  
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h3>Editar Información de Perfil</h3>
+
+    <!-- FORMULARIO CON VALIDACIONES -->
+    <form method="POST" class="needs-validation" novalidate>
+
+      <!-- Usuario -->
+      <div class="form-group mb-3">
+        <label for="usuario">Nombre de usuario</label>
+        <input type="text" class="form-control solo-letras" name="usuario"
+               value="{{ cliente.usuario }}" required minlength="3" maxlength="40"
+               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s]+">
+        <div class="invalid-feedback">Ingrese un nombre válido (solo letras y números).</div>
+      </div>
+
+      <!-- Correo -->
+      <div class="form-group mb-3">
+        <label for="correo">Correo electrónico</label>
+        <input type="email" class="form-control" name="correo" id="correo"
+               value="{{ cliente.correo or '' }}" required
+               pattern="^[\w\.-]+@[\w\.-]+\.\w{2,4}$">
+        <div class="invalid-feedback">Ingrese un correo electrónico válido.</div>
+      </div>
+
+      <!-- Dirección -->
+      <div class="form-group mb-3">
+        <label for="direccion">Dirección</label>
+        <input type="text" class="form-control" name="direccion"
+               value="{{ cliente.direccion or '' }}" minlength="4" maxlength="80">
+        <div class="invalid-feedback">La dirección debe tener al menos 4 caracteres.</div>
+      </div>
+
+      <!-- Teléfono -->
+      <div class="form-group mb-4">
+        <label for="telefono">Teléfono</label>
+        <input type="text" class="form-control solo-numeros" name="telefono"
+               value="{{ cliente.telefono or '' }}" required minlength="7" maxlength="15"
+               pattern="[0-9]{7,15}">
+        <div class="invalid-feedback">Ingrese un teléfono válido (solo números 7–15 dígitos).</div>
+      </div>
+
+      <div class="btn-group-custom">
+        <button type="submit" class="btn btn-success">Guardar cambios</button>
+        <a href="{{ url_for('cliente_dashboard') }}" class="btn btn-outline-primary">Regresar al perfil</a>
+        <a href="{{ url_for('cliente_dashboard') }}" class="btn btn-secondary">Cancelar</a>
+      </div>
+
+    </form>
+
+  </div>
+
+  <!-- JAVASCRIPT DE VALIDACIONES -->
+  <script>
+    /* ============================
+       VALIDACIÓN BOOTSTRAP
+    ============================= */
+    (() => {
+      const forms = document.querySelectorAll('.needs-validation');
+      forms.forEach(form => {
+        form.addEventListener('submit', e => {
+          if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        });
+      });
+    })();
+
+    /* ============================
+       SOLO LETRAS (usuario)
+    ============================= */
+    document.querySelectorAll('.solo-letras').forEach(input => {
+      input.addEventListener('input', () => {
+        input.value = input.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s]/g, '');
+      });
+    });
+
+    /* ============================
+       SOLO NÚMEROS (telefono)
+    ============================= */
+    document.querySelectorAll('.solo-numeros').forEach(input => {
+      input.addEventListener('input', () => {
+        input.value = input.value.replace(/[^0-9]/g, '');
+      });
+    });
+  </script>
+
+</body>
+</html>

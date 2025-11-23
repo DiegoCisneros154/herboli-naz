@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Compras de Clientes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <style>
+        body { background-color: #f2f2f2; padding: 20px; }
+        .cliente-card { background-color: white; padding: 20px; margin-bottom: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .cliente-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .cliente-header h4 { margin: 0; }
+        .table th { background-color: #28a745; color: white; }
+        .subtotal { font-weight: bold; text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4 text-center">Compras de Clientes</h1>
+        <a href="{{ url_for('configuracion') }}" class="btn btn-secondary mb-4">⬅ Volver al Panel de Configuración</a>
+
+        {% set current_cliente = None %}
+        {% set subtotal = 0 %}
+        {% for compra in compras %}
+            {% if current_cliente != compra.cliente_id %}
+                {% if current_cliente is not none %}
+                        <tr>
+                            <td colspan="4" class="subtotal">Subtotal del Cliente:</td>
+                            <td class="fw-bold">{{ subtotal }}</td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+                {% set subtotal = 0 %}
+                {% endif %}
+
+                <div class="cliente-card">
+                    <div class="cliente-header">
+                        <h4>{{ compra.cliente_nombre }} (ID: {{ compra.cliente_id }})</h4>
+                        <span>Tel: {{ compra.cliente_telefono }}</span>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Pedido ID</th>
+                                <th>Tipo de Árbol</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                {% set current_cliente = compra.cliente_id %}
+            {% endif %}
+
+            <tr>
+                <td>{{ compra.pedido_id }}</td>
+                <td>{{ compra.tipo_arbol }}</td>
+                <td>{{ compra.cantidad }}</td>
+                <td>{{ compra.precio }}</td>
+                <td>{{ compra.total }}</td>
+                <td>{{ compra.fecha }}</td>
+            </tr>
+            {% set subtotal = subtotal + compra.total %}
+        {% endfor %}
+
+        {% if current_cliente is not none %}
+            <tr>
+                <td colspan="4" class="subtotal">Subtotal del Cliente:</td>
+                <td class="fw-bold">{{ subtotal }}</td>
+            </tr>
+            </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

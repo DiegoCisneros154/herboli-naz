@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Administrador - Medi</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+</head>
+<body class="bg-light">
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">👑 Panel Admin </a>
+      <div>
+        <span class="text-white me-3">Bienvenido, {{ usuario }}</span>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Administración General</h2>
+
+    <!-- Botones principales -->
+    <div class="d-flex justify-content-center gap-3 mb-5">
+      <a href="#clientes" class="btn btn-primary">👥 Clientes</a>
+      <a href="{{ url_for('proveedores') }}" class="btn btn-secondary">🧾 Proveedores</a>
+    </div>
+    <!-- Sección CLIENTES -->
+    <section id="clientes" class="mb-5">
+      <h4 class="text-center text-primary mb-3">Gestión de Clientes</h4>
+      <div class="card p-4 shadow-sm">
+        <form id="clienteForm">
+          <div class="row g-3">
+            <div class="col-md-2">
+              <label for="idCliente" class="form-label">ID Cliente</label>
+              <input type="text" id="idCliente" class="form-control" placeholder="Ej. 1">
+            </div>
+            <div class="col-md-4">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" id="nombre" class="form-control" placeholder="Nombre completo">
+            </div>
+            <div class="col-md-3">
+              <label for="direccion" class="form-label">Dirección</label>
+              <input type="text" id="direccion" class="form-control" placeholder="Calle, número...">
+            </div>
+            <div class="col-md-3">
+              <label for="telefono" class="form-label">Teléfono</label>
+              <input type="text" id="telefono" class="form-control" placeholder="Ej. 5551234567">
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="button" class="btn btn-info">🔍 Buscar</button>
+            <button type="button" class="btn btn-warning text-white">✏️ Modificar</button>
+            <button type="button" class="btn btn-danger">🗑️ Eliminar</button>
+            <button type="button" class="btn btn-success">💾 Guardar</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tabla de clientes -->
+      <div class="card mt-4 p-4 shadow-sm">
+        <h5 class="text-center mb-3">📋 Lista de Clientes Registrados</h5>
+        <table class="table table-bordered table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Dirección</th>
+              <th>Teléfono</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cliente in clientes %}
+            <tr>
+              <td>{{ cliente.id }}</td>
+              <td>{{ cliente.nombre }}</td>
+              <td>{{ cliente.direccion }}</td>
+              <td>{{ cliente.telefono }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Sección PRODUCTOS -->
+    <section id="productos">
+      <h4 class="text-center text-success mb-3">Gestión de Productos</h4>
+      <div class="card p-4 shadow-sm">
+        <p>Desde aquí podrás agregar, modificar o eliminar productos (plantas) en el catálogo.</p>
+        <div class="text-center">
+          <a href="{{ url_for('plantas') }}" class="btn btn-success">Ver catálogo de plantas</a>
+          <hr class="my-4">
+<h5 class="text-center">🌱 Agregar Nueva Planta</h5>
+<form method="post" action="{{ url_for('agregar_planta') }}" class="border p-3 mb-4">
+  <div class="row g-3">
+    <div class="col-md-3">
+      <label>Nombre:</label>
+      <input type="text" name="nombre" class="form-control" required>
+    </div>
+    <div class="col-md-4">
+      <label>Descripción:</label>
+      <input type="text" name="descripcion" class="form-control" required>
+    </div>
+    <div class="col-md-2">
+      <label>Precio:</label>
+      <input type="number" name="precio" class="form-control" required>
+    </div>
+    <div class="col-md-3">
+      <label>Imagen (archivo .jpg):</label>
+      <input type="text" name="imagen" class="form-control" required>
+    </div>
+  </div>
+  <div class="text-end mt-3">
+    <button type="submit" class="btn btn-success">Agregar Planta</button>
+  </div>
+</form>
+          <hr class="my-4">
+<h5 class="text-center">🛠️ Editar Plantas del Catálogo</h5>
+{% for planta in plantas %}
+<form method="post" action="{{ url_for('administrar_plantas') }}" class="border p-3 mb-4">
+  <input type="hidden" name="id" value="{{ planta.id }}">
+  <div class="row g-3">
+    <div class="col-md-3">
+      <label>Nombre:</label>
+      <input type="text" name="nombre" value="{{ planta.nombre }}" class="form-control">
+    </div>
+    <div class="col-md-4">
+      <label>Descripción:</label>
+      <input type="text" name="descripcion" value="{{ planta.descripcion }}" class="form-control">
+    </div>
+    <div class="col-md-2">
+      <label>Precio:</label>
+      <input type="number" name="precio" value="{{ planta.precio }}" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <label>Imagen:</label>
+      <input type="text" name="imagen" value="{{ planta.imagen }}" class="form-control">
+    </div>
+  </div>
+  <div class="text-end mt-3">
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+  </div>
+</form>
+{% endfor %}
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="text-center mt-5 mb-3 text-muted">
+    © 2025 Medi - Panel Administrador
+  </footer>
+
+  <!-- Funcionalidad para botones -->
+  <script>
+    function getFormData() {
+      return {
+        idCliente: document.getElementById('idCliente').value,
+        nombre: document.getElementById('nombre').value,
+        direccion: document.getElementById('direccion').value,
+        telefono: document.getElementById('telefono').value
+      };
+    }
+
+    document.querySelector('.btn-info').addEventListener('click', () => {
+      fetch('/cliente/buscar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idCliente: document.getElementById('idCliente').value })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.nombre) {
+          document.getElementById('nombre').value = data.nombre;
+          document.getElementById('direccion').value = data.direccion;
+          document.getElementById('telefono').value = data.telefono;
+        } else {
+          alert('Cliente no encontrado');
+        }
+      });
+    });
+
+    document.querySelector('.btn-success').addEventListener('click', () => {
+      fetch('/cliente/guardar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(getFormData())
+      })
+      .then(res => res.json())
+      .then(data => alert(data.mensaje));
+    });
+
+    document.querySelector('.btn-warning').addEventListener('click', () => {
+      fetch('/cliente/modificar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(getFormData())
+      })
+      .then(res => res.json())
+      .then(data => alert(data.mensaje));
+    });
+
+    document.querySelector('.btn-danger').addEventListener('click', () => {
+      fetch('/cliente/eliminar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idCliente: document.getElementById('idCliente').value })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.mensaje);
+        document.getElementById('clienteForm').reset();
+      });
+    });
+  </script>
+</body>
+</html>

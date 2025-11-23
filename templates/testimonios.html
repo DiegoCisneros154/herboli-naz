@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Testimonios - Medi</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <style>
+    body {
+      background-color: #f4f6f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #212529;
+    }
+
+    .container {
+      max-width: 800px;
+      margin-top: 60px;
+    }
+
+    h2 {
+      font-weight: 700;
+      color: #1f3c88;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    h4 {
+      font-weight: 600;
+      color: #495057;
+      margin-top: 50px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #495057;
+    }
+
+    textarea.form-control {
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 15px;
+    }
+
+    .btn {
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
+
+    .btn-success {
+      background-color: #2dce89;
+      border: none;
+    }
+
+    .btn-success:hover {
+      background-color: #28b67a;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      border: none;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .btn-outline-primary {
+      border-color: #1f3c88;
+      color: #1f3c88;
+    }
+
+    .btn-outline-primary:hover {
+      background-color: #1f3c88;
+      color: #fff;
+    }
+
+    .comment-box {
+      margin-top: 30px;
+    }
+
+    .card {
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .card-header {
+      background-color: #e9ecef;
+      font-weight: 600;
+      color: #1f3c88;
+      padding: 15px 20px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .card-body {
+      padding: 20px;
+      background-color: #ffffff;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .no-comments {
+      font-style: italic;
+      color: #6c757d;
+      margin-top: 20px;
+    }
+
+    .btn-group-custom {
+      display: flex;
+      justify-content: flex-start;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>💬 Deja tu comentario, {{ cliente.usuario }}</h2>
+
+    <!-- Formulario para dejar testimonio -->
+    <form method="POST" class="mb-5">
+      <div class="form-group mb-3">
+        <label for="mensaje">Tu experiencia con nosotros:</label>
+        <textarea name="mensaje" id="mensaje" class="form-control" rows="4" required></textarea>
+      </div>
+
+      <div class="btn-group-custom">
+        <button type="submit" class="btn btn-success">Enviar comentario</button>
+        <a href="{{ url_for('cliente_dashboard') }}" class="btn btn-outline-primary">Regresar al perfil</a>
+        <a href="{{ url_for('cliente_dashboard') }}" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </form>
+
+    <!-- Lista de testimonios -->
+    <h4>🃏 Comentarios de otros clientes:</h4>
+    {% for t in testimonios %}
+      <div class="card comment-box mb-4">
+        <div class="card-header">
+          {{ t.nombre }} <small class="text-muted">({{ t.telefono or 'Sin teléfono' }})</small>
+        </div>
+        <div class="card-body">
+          <p>{{ t.mensaje }}</p>
+        </div>
+      </div>
+    {% else %}
+      <p class="no-comments">Aún no hay comentarios.</p>
+    {% endfor %}
+  </div>
+
+</body>
+</html>
