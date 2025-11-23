@@ -4,11 +4,22 @@ import mysql.connector
 app = Flask(__name__)
 app.secret_key = 'clave_super_secreta'
 
+import os
+from urllib.parse import urlparse
+import mysql.connector
+
+# Obtener la URL de la base de datos desde Render
+db_url = os.environ.get("DATABASE_URL")
+
+# Parsear la URL
+url = urlparse(db_url)
+
 DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'medi_db'
+    "host": url.hostname,
+    "user": url.username,
+    "password": url.password,
+    "database": url.path[1:],  # quitar la barra inicial
+    "port": url.port
 }
 
 def obtener_conexion():
