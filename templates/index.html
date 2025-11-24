@@ -5,188 +5,313 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Herboli Naz - Vivero Natural</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <!-- Iconos de Bootstrap para un toque moderno -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
   <style>
-/* ===== ESTILO VIVERO MODERNO Y MINIMALISTA ===== */
-:root {
-  --verde: #4a7856;
-  --verde-claro: #9cc69b;
-  --beige: #f5f1e6;
-  --madera: #e6d8b8;
-  --blanco: #ffffff;
-  --texto: #2c2c2c;
-  --sombra: 0 10px 25px rgba(0, 0, 0, 0.1);
-  --radius: 18px;
-}
+    /* ===== VARIABLES & RESET ===== */
+    :root {
+      --verde-oscuro: #2e523e; /* Más contraste */
+      --verde: #4a7856;
+      --verde-claro: #cfdec4;
+      --beige: #F9F7F2; /* Un beige más limpio */
+      --blanco: #ffffff;
+      --texto: #2c3e33;
+      --gris-claro: #f4f4f4;
+      --sombra-suave: 0 20px 40px -15px rgba(74, 120, 86, 0.15);
+      --sombra-hover: 0 25px 50px -12px rgba(74, 120, 86, 0.25);
+      --radius: 24px;
+    }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: var(--beige);
-  color: var(--texto);
-  margin: 0;
-}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--beige);
+      color: var(--texto);
+      margin: 0;
+      overflow-x: hidden;
+    }
 
-/* ===== NAVBAR ===== */
-.navbar {
-  background: var(--blanco);
-  box-shadow: var(--sombra);
-  padding: 12px 0;
-}
+    /* ===== NAVBAR MODERNA (Glassmorphism) ===== */
+    .navbar {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px); /* Efecto vidrio borroso */
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(74, 120, 86, 0.1);
+      padding: 15px 0;
+      transition: all 0.3s ease;
+    }
 
-.navbar-brand {
-  font-weight: 700;
-  color: var(--verde) !important;
-  font-size: 1.4rem;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+    .navbar-brand {
+      font-weight: 800;
+      color: var(--verde-oscuro) !important;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: -0.5px;
+    }
 
-.navbar-brand img {
-  height: 65px;
-  width: 65px;
-  border-radius: 50%;
-  border: 2px solid var(--verde);
-}
+    .navbar-brand img {
+      height: 50px;
+      width: 50px;
+      border-radius: 12px; /* Menos circular, más moderno */
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
 
-.nav-link {
-  font-weight: 500;
-  color: var(--texto) !important;
-  transition: 0.3s;
-}
+    .nav-link {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--texto) !important;
+      margin: 0 8px;
+      padding: 8px 16px !important;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
 
-.nav-link:hover {
-  color: var(--verde) !important;
-}
+    .nav-link:hover, .nav-link.active {
+      color: var(--verde-oscuro) !important;
+      background-color: var(--verde-claro);
+    }
 
-/* ===== HERO ===== */
-.hero {
-  background: linear-gradient(rgba(74, 120, 86, 0.6), rgba(74, 120, 86, 0.6)),
-              url('{{ url_for("static", filename="images/vivero-bg.jpg") }}') center/cover no-repeat;
-  height: 90vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: var(--blanco);
-  padding: 0 20px;
-}
+    /* Botón especial para Login/Registro */
+    .nav-btn {
+      background-color: var(--verde);
+      color: var(--blanco) !important;
+      box-shadow: 0 4px 15px rgba(74, 120, 86, 0.3);
+    }
+    .nav-btn:hover {
+      background-color: var(--verde-oscuro);
+      transform: translateY(-2px);
+      color: var(--blanco) !important;
+    }
 
-.hero h1 {
-  font-size: 3.5rem;
-  font-weight: 700;
-  margin-bottom: 15px;
-  animation: fadeInDown 1.2s ease;
-}
+    /* ===== HERO SECTION ===== */
+    .hero {
+      position: relative;
+      /* Gradiente moderno sobre la imagen */
+      background: linear-gradient(135deg, rgba(46, 82, 62, 0.85) 0%, rgba(74, 120, 86, 0.5) 100%),
+                  url('{{ url_for("static", filename="images/vivero-bg.jpg") }}') center/cover no-repeat;
+      background-attachment: fixed; /* Efecto Parallax */
+      height: 92vh; /* Casi pantalla completa */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--blanco);
+      border-bottom-left-radius: 60px;
+      border-bottom-right-radius: 60px;
+      margin-bottom: 60px;
+      overflow: hidden;
+    }
 
-.hero p {
-  font-size: 1.2rem;
-  max-width: 600px;
-  margin: 0 auto 30px;
-  animation: fadeInUp 1.4s ease;
-}
+    .hero-content {
+      max-width: 800px;
+      padding: 0 20px;
+      z-index: 2;
+    }
 
-.btn-hero {
-  background: var(--blanco);
-  color: var(--verde);
-  border-radius: 50px;
-  padding: 14px 35px;
-  font-weight: 600;
-  border: none;
-  transition: all 0.3s ease;
-  box-shadow: var(--sombra);
-}
+    .hero h1 {
+      font-size: 4.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      letter-spacing: -1px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      animation: fadeInUp 1s ease;
+    }
 
-.btn-hero:hover {
-  background: var(--verde);
-  color: var(--blanco);
-  transform: translateY(-5px);
-}
+    .hero p {
+      font-size: 1.3rem;
+      font-weight: 300;
+      margin-bottom: 40px;
+      opacity: 0.95;
+      animation: fadeInUp 1.2s ease;
+    }
 
-/* ===== BENEFICIOS ===== */
-.benefits {
-  background: var(--blanco);
-  padding: 80px 20px;
-  border-radius: 50px 50px 0 0;
-  margin-top: -60px;
-  box-shadow: var(--sombra);
-  position: relative;
-  z-index: 2;
-}
+    .btn-hero {
+      background: var(--blanco);
+      color: var(--verde-oscuro);
+      border-radius: 50px;
+      padding: 16px 40px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Rebote suave */
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
 
-.benefits h2 {
-  text-align: center;
-  font-weight: 700;
-  color: var(--verde);
-  font-size: 2.3rem;
-  margin-bottom: 10px;
-}
+    .btn-hero:hover {
+      transform: translateY(-5px) scale(1.02);
+      background: var(--verde-claro);
+      color: var(--verde-oscuro);
+      box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+    }
 
-.benefits p.subtitle {
-  text-align: center;
-  color: #555;
-  margin-bottom: 50px;
-}
+    .btn-outline-hero {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.6);
+      color: var(--blanco);
+      margin-left: 15px;
+    }
+    .btn-outline-hero:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--blanco);
+      color: var(--blanco);
+    }
 
-.card-benefit {
-  border: none;
-  border-radius: var(--radius);
-  background: var(--beige);
-  text-align: center;
-  padding: 30px 25px;
-  transition: all 0.3s ease;
-  box-shadow: var(--sombra);
-}
+    /* ===== SECCIÓN BENEFICIOS (Cards Modernas) ===== */
+    .benefits {
+      padding: 40px 0 100px 0;
+    }
 
-.card-benefit:hover {
-  transform: translateY(-10px);
-  background: var(--verde-claro);
-  color: var(--blanco);
-}
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
 
-.card-benefit img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-}
+    .section-header h2 {
+      color: var(--verde-oscuro);
+      font-weight: 800;
+      font-size: 2.5rem;
+      position: relative;
+      display: inline-block;
+    }
 
-/* ===== FOOTER ===== */
-footer {
-  background: var(--verde);
-  color: var(--blanco);
-  text-align: center;
-  padding: 40px 10px;
-  font-size: 15px;
-  margin-top: 80px;
-  letter-spacing: 0.3px;
-}
+    /* Detalle decorativo debajo del título */
+    .section-header h2::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: var(--verde);
+      margin: 10px auto 0;
+      border-radius: 2px;
+    }
 
-footer span {
-  color: var(--madera);
-  font-weight: 600;
-}
+    .card-benefit {
+      background: var(--blanco);
+      border-radius: var(--radius);
+      padding: 40px 30px;
+      text-align: center;
+      transition: all 0.4s ease;
+      border: 1px solid rgba(0,0,0,0.03);
+      box-shadow: var(--sombra-suave);
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
 
-/* ===== ANIMACIONES ===== */
-@keyframes fadeInDown {
-  0% { opacity: 0; transform: translateY(-30px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
+    /* Efecto hover suave */
+    .card-benefit:hover {
+      transform: translateY(-15px);
+      box-shadow: var(--sombra-hover);
+      border-color: var(--verde-claro);
+    }
 
-@keyframes fadeInUp {
-  0% { opacity: 0; transform: translateY(30px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
+    /* Círculo decorativo detrás del icono */
+    .card-benefit::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: var(--verde-claro);
+      border-radius: 50%;
+      opacity: 0.3;
+      z-index: -1;
+      transition: 0.5s;
+    }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .hero h1 { font-size: 2.4rem; }
-  .hero p { font-size: 1rem; }
-  .card-benefit { margin-bottom: 25px; }
-}
+    .card-benefit:hover::before {
+      transform: scale(1.5);
+      opacity: 0.1;
+    }
+
+    .img-wrapper {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 25px;
+      position: relative;
+    }
+
+    .card-benefit img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--blanco);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .card-benefit h5 {
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: var(--verde-oscuro);
+    }
+
+    .card-benefit p {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ===== FOOTER MODERNO ===== */
+    footer {
+      background: var(--verde-oscuro);
+      color: rgba(255,255,255,0.8);
+      padding: 60px 0 30px;
+      border-top-left-radius: 60px;
+      border-top-right-radius: 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    footer h4 {
+      color: var(--blanco);
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    footer .social-icons a {
+      color: var(--blanco);
+      font-size: 1.5rem;
+      margin: 0 10px;
+      transition: 0.3s;
+    }
+    footer .social-icons a:hover {
+      color: var(--verde-claro);
+      transform: scale(1.2);
+    }
+
+    footer .copyright {
+      margin-top: 40px;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 20px;
+    }
+
+    /* ===== ANIMACIONES ===== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .hero { height: 85vh; border-radius: 0 0 30px 30px; }
+      .hero h1 { font-size: 2.8rem; }
+      .card-benefit { margin-bottom: 20px; }
+      .navbar { background: rgba(255, 255, 255, 0.95); }
+    }
   </style>
 </head>
 
@@ -206,59 +331,91 @@ footer span {
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav align-items-center">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('plantas') }}">Catálogo</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('empresa') }}">Nosotros</a></li>
+        
         {% if 'usuario' in session %}
-          <li class="nav-item me-3"><span class="nav-link">👋 {{ session['usuario'] }}</span></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('cliente_dashboard') }}">Cuenta</a></li>
+          <li class="nav-item ms-lg-3 d-flex align-items-center">
+            <span class="nav-link fw-bold text-success">Hola, {{ session['usuario'] }}</span>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('cliente_dashboard') }}">Mi Cuenta</a></li>
           {% if session['rol'] == 'admin' %}
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('configuracion') }}">⚙️ Configuración</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('configuracion') }}"><i class="bi bi-gear-fill"></i> Admin</a></li>
           {% endif %}
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Salir</a></li>
+          <li class="nav-item ms-2">
+            <a class="nav-link nav-btn px-4" href="{{ url_for('logout') }}">Salir</a>
+          </li>
         {% else %}
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Registrar</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Iniciar sesión</a></li>
+          <li class="nav-item ms-lg-2">
+            <a class="nav-link" href="{{ url_for('login') }}">Ingresar</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-btn" href="{{ url_for('register') }}">Registrarse</a>
+          </li>
         {% endif %}
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('empresa') }}">Empresa</a></li>
       </ul>
     </div>
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- HERO SECTION -->
 <section class="hero">
-  <div>
-    <h1>🌿 Bienvenido a Herboli Naz</h1>
-    <p>Vivero natural donde la vida florece. Árboles, plantas y productos naturales para tu hogar y bienestar.</p>
-    <a href="{{ url_for('plantas') }}" class="btn btn-hero me-3">Explorar Catálogo</a>
-    {% if 'usuario' in session %}
-    <a href="{{ url_for('compras_realizadas') }}" class="btn btn-hero">Mis Compras</a>
-    {% endif %}
+  <div class="hero-content">
+    <h1>Naturaleza viva<br>para tu hogar</h1>
+    <p>Descubre nuestra selección premium de plantas, árboles y productos orgánicos. Cuidamos cada detalle desde la raíz hasta tu jardín.</p>
+    
+    <div class="d-flex justify-content-center flex-wrap gap-3">
+      <a href="{{ url_for('plantas') }}" class="btn btn-hero">
+        Ver Catálogo <i class="bi bi-arrow-right-circle"></i>
+      </a>
+      {% if 'usuario' in session %}
+      <a href="{{ url_for('compras_realizadas') }}" class="btn btn-hero btn-outline-hero">
+        <i class="bi bi-bag-check"></i> Mis Pedidos
+      </a>
+      {% endif %}
+    </div>
   </div>
 </section>
 
 <!-- BENEFICIOS -->
 <section class="benefits container">
-  <h2>Nuestros Beneficios</h2>
-  <p class="subtitle">Cuidamos de ti y de la naturaleza 🌱</p>
-  <div class="row g-4 justify-content-center">
+  <div class="section-header">
+    <h2>¿Por qué elegirnos?</h2>
+    <p class="mt-3 text-muted">Comprometidos con la calidad y el medio ambiente</p>
+  </div>
+
+  <div class="row g-4">
+    <!-- Card 1 -->
     <div class="col-md-4">
       <div class="card-benefit">
-        <img src="{{ url_for('static', filename='images/icon1.jpg') }}" alt="Natural">
-        <h5>Productos 100% Naturales</h5>
-        <p>Sin químicos, sin aditivos. Solo lo mejor de la tierra para ti.</p>
+        <div class="img-wrapper">
+          <img src="{{ url_for('static', filename='images/icon1.jpg') }}" alt="Natural">
+        </div>
+        <h5>100% Orgánico</h5>
+        <p>Cultivos libres de pesticidas dañinos. Garantizamos productos que respetan la tierra y tu salud.</p>
       </div>
     </div>
+    
+    <!-- Card 2 -->
     <div class="col-md-4">
       <div class="card-benefit">
-        <img src="{{ url_for('static', filename='images/icon2.jpg') }}" alt="Saludable">
-        <h5>Salud y Bienestar</h5>
-        <p>Mejora tu calidad de vida con productos naturales y sostenibles.</p>
+        <div class="img-wrapper">
+          <img src="{{ url_for('static', filename='images/icon2.jpg') }}" alt="Bienestar">
+        </div>
+        <h5>Vida & Bienestar</h5>
+        <p>Las plantas purifican tu aire y reducen el estrés. Transforma tu espacio en un santuario natural.</p>
       </div>
     </div>
+    
+    <!-- Card 3 -->
     <div class="col-md-4">
       <div class="card-benefit">
-        <img src="{{ url_for('static', filename='images/icon3.jpg') }}" alt="Confianza">
-        <h5>Confianza Verde</h5>
-        <p>Más de 10 años cuidando de ti y del medio ambiente con calidad garantizada.</p>
+        <div class="img-wrapper">
+          <img src="{{ url_for('static', filename='images/icon3.jpg') }}" alt="Experiencia">
+        </div>
+        <h5>Asesoría Experta</h5>
+        <p>Más de 10 años de experiencia. Te guiamos para que tus plantas crezcan fuertes y sanas.</p>
       </div>
     </div>
   </div>
@@ -266,8 +423,20 @@ footer span {
 
 <!-- FOOTER -->
 <footer>
-  🌳 <span>Herboli Naz</span> — Cuidando la vida desde la raíz.  
-  <br>© 2025 | Todos los derechos reservados.
+  <div class="container">
+    <h4>Herboli Naz</h4>
+    <p>Conectando personas con la naturaleza, una planta a la vez.</p>
+    
+    <div class="social-icons mt-4">
+      <a href="#"><i class="bi bi-facebook"></i></a>
+      <a href="#"><i class="bi bi-instagram"></i></a>
+      <a href="#"><i class="bi bi-whatsapp"></i></a>
+    </div>
+
+    <div class="copyright">
+      &copy; 2025 Herboli Naz. Todos los derechos reservados.
+    </div>
+  </div>
 </footer>
 
 <!-- Scripts -->
