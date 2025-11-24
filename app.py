@@ -4,23 +4,21 @@ import mysql.connector
 app = Flask(__name__)
 app.secret_key = 'clave_super_secreta'
 
-import os
-from urllib.parse import urlparse
-import mysql.connector
 
-db_url = os.environ.get("DATABASE_URL")  # Variable de entorno en Railway
 
-url = urlparse(db_url)
+# --- BORRA LO QUE TENÍAS DE URLPARSE Y O.ENVIRON ---
+# --- PEGA ESTO EXACTAMENTE: ---
 
 DB_CONFIG = {
-    "host": url.hostname,
-    "user": url.username,
-    "password": url.password,
-    "database": url.path[1:],  # quitar la barra inicial
-    "port": url.port
+    "host": "trolley.proxy.rlwy.net",       # El mismo host de Workbench
+    "user": "root",                         # El mismo usuario
+    "password": "cdBeiqOovDCuwMseZEvxdXrMAJeKzeGA", # Tu contraseña REAL
+    "database": "railway",                  # 👈 IMPORTANTE: Forzamos la base 'railway'
+    "port": 39658                           # El puerto correcto
 }
 
 def obtener_conexion():
+    # Esta función ya usará la configuración forzada de arriba
     return mysql.connector.connect(**DB_CONFIG)
 
 
