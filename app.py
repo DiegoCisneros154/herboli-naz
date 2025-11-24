@@ -731,7 +731,98 @@ def debug_tablas():
     except Exception as e:
         return jsonify({"Error": str(e)})
 
+@app.route('/crear_tablas_magicas')
+def crear_tablas():
+    try:
+        conexion = obtener_conexion()
+        cursor = conexion.cursor()
+        
+        # Lista de comandos SQL para crear tu estructura exacta
+        comandos_sql = [
+            """CREATE TABLE IF NOT EXISTS usuarios (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                usuario VARCHAR(100) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                correo VARCHAR(150),
+                telefono VARCHAR(20),
+                direccion TEXT,
+                rol VARCHAR(50) DEFAULT 'usuario'
+            )""",
+            """CREATE TABLE IF NOT EXISTS clientes (
+                id INT PRIMARY KEY,
+                nombre VARCHAR(100),
+                direccion TEXT,
+                telefono VARCHAR(20)
+            )""",
+            """CREATE TABLE IF NOT EXISTS plantas (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                nombre VARCHAR(100) NOT NULL,
+                descripcion TEXT,
+                precio DECIMAL(10, 2) NOT NULL,
+                imagen VARCHAR(255)
+            )""",
+            """CREATE TABLE IF NOT EXISTS carrito (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                cliente_id INT,
+                planta_id INT,
+                cantidad INT DEFAULT 1,
+                FOREIGN KEY (cliente_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+                FOREIGN KEY (planta_id) REFERENCES plantas(id) ON DELETE CASCADE
+            )""",
+            """CREATE TABLE IF NOT EXISTS pedidos (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                cliente_id INT,
+                fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+                total DECIMAL(10, 2),
+                FOREIGN KEY (cliente_id) REFERENCES usuarios(id)
+            )""",
+            """CREATE TABLE IF NOT EXISTS detalle_pedidos (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                pedido_id INT,
+                planta_id INT,
+                cantidad INT,
+                precio_unitario DECIMAL(10, 2),
+                FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE,
+                FOREIGN KEY (planta_id) REFERENCES plantas(id)
+            )""",
+            """CREATE TABLE IF NOT EXISTS testimonios (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                cliente_id INT,
+                nombre VARCHAR(100),
+                telefono VARCHAR(20),
+                mensaje TEXT,
+                FOREIGN KEY (cliente_id) REFERENCES usuarios(id)
+            )""",
+            """CREATE TABLE IF NOT EXISTS proveedores (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                nombre VARCHAR(100),
+                telefono VARCHAR(20),
+                correo VARCHAR(150),
+                producto VARCHAR(150),
+                direccion TEXT,
+                calificacion INT DEFAULT 5,
+                notas TEXT
+            )""",
+            # Insertamos un admin y plantas de prueba si no existen
+            """INSERT IGNORE INTO usuarios (id, usuario, password, correo, rol) 
+               VALUES (1, 'admin', '123', 'admin@tienda.com', 'admin')""",
+            """INSERT IGNORE INTO plantas (nombre, descripcion, precio, imagen) 
+               VALUES ('Planta Prueba', 'Creada automaticamente', 100.00, 'default.jpg')"""
+        ]
 
+        resultados = []
+        for sql in comandos_sql:
+            cursor.execute(sql)
+            resultados.append("Ejecutado correctamente")
+        
+        conexion.commit()
+        cursor.close()
+        conexion.close()
+        
+        return jsonify({"Estado": "¡Tablas creadas con éxito!", "Detalle": resultados})
+        
+    except Exception as e:
+        return jsonify({"Error Fatal": str(e)})
 
 # Ejecutar servidor
 if __name__ == '__main__':
