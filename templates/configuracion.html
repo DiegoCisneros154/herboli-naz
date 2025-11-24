@@ -92,31 +92,36 @@
       box-shadow: 0 0 0 3px rgba(74, 120, 86, 0.1);
     }
 
-    /* ===== INPUT FILE CORREGIDO (Para que no se vea cortado) ===== */
+   
+   /* ===== INPUT FILE FINAL (SOLUCIÓN DEFINITIVA) ===== */
     input[type="file"].form-control {
-      padding: 0 !important; /* Quita el relleno interno */
+      padding: 0 !important;
+      color: transparent; /* <--- TRUCO: Hace invisible el texto "Sin archivos..." */
       display: flex;
       align-items: center;
       overflow: hidden;
-      line-height: normal; /* Asegura altura normal */
+      height: 45px; /* Altura fija */
     }
 
+    /* Estilo del botón verde interno */
     input[type="file"]::file-selector-button {
+      visibility: visible; /* Asegura que el botón SÍ se vea */
       background-color: var(--verde);
       color: white;
       border: none;
-      padding: 12px 20px; /* Botón más alto y ancho */
-      margin-right: 15px;
+      height: 100%;
+      padding: 0 25px; /* Un poco más ancho */
+      margin-right: 0; 
       cursor: pointer;
       transition: 0.3s;
-      height: 100%; /* Ocupa todo el alto */
-      border-right: 1px solid rgba(0,0,0,0.1);
+      font-weight: 600;
+      /* Opcional: Para que ocupe todo el ancho si quieres */
+      /* width: 100%; */ 
     }
 
     input[type="file"]::file-selector-button:hover {
       background-color: var(--verde-oscuro);
     }
-
     /* ===== BOTONES DE NAVEGACIÓN RÁPIDA ===== */
     .nav-pills .nav-link {
       background: rgba(255,255,255,0.2);

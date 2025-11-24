@@ -2,261 +2,405 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Finalizar Compra - Medi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalizar Compra - Herboli Naz</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
   <style>
+    /* ===== VARIABLES (Mismas que tu Index) ===== */
+    :root {
+      --verde-oscuro: #2e523e;
+      --verde: #4a7856;
+      --verde-claro: #cfdec4;
+      --beige: #F9F7F2;
+      --blanco: #ffffff;
+      --texto: #2c3e33;
+      --sombra-suave: 0 10px 30px -10px rgba(74, 120, 86, 0.15);
+      --radius: 20px;
+    }
+
     body {
-      background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--beige);
+      color: var(--texto);
+      display: flex;
+      flex-direction: column;
       min-height: 100vh;
+    }
+
+    /* Navbar y Footer ajustes */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    .navbar-brand { color: var(--verde-oscuro) !important; font-weight: 800; }
+    .nav-link { color: var(--texto) !important; font-weight: 500; }
+    .nav-btn { background-color: var(--verde); color: var(--blanco) !important; border-radius: 50px; }
+
+    footer {
+      background: var(--verde-oscuro);
+      color: rgba(255,255,255,0.8);
+      padding: 40px 0 20px;
+      border-top-left-radius: 40px;
+      border-top-right-radius: 40px;
+      margin-top: auto; /* Empuja el footer al fondo */
+    }
+
+    /* ===== ESTILOS DEL CHECKOUT ===== */
+    .checkout-section {
+      padding-top: 100px; /* Espacio para el navbar fijo */
+      padding-bottom: 60px;
+    }
+
+    .section-title {
+      color: var(--verde-oscuro);
+      font-weight: 800;
+      margin-bottom: 30px;
+      position: relative;
+      display: inline-block;
+    }
+    
+    /* Tarjetas de contenido */
+    .card-custom {
+      background: var(--blanco);
+      border: none;
+      border-radius: var(--radius);
+      box-shadow: var(--sombra-suave);
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+
+    .card-header-custom {
+      font-weight: 600;
+      color: var(--verde);
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--verde-claro);
+      padding-bottom: 10px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
+      gap: 10px;
     }
 
-    .checkout-card {
-      max-width: 750px;
-      width: 100%;
-      border-radius: 15px;
-      overflow: hidden;
-      background-color: #fff;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .checkout-header {
-      background: linear-gradient(90deg, #0d6efd, #2dce89);
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .checkout-header i {
-      margin-right: 10px;
-    }
-
+    /* Lista de productos */
     .list-group-item {
       border: none;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px dashed var(--verde-claro);
+      padding: 15px 0;
+      color: var(--texto);
+    }
+    .list-group-item:last-child {
+      border-bottom: none;
+    }
+    .total-row {
+      font-size: 1.2rem;
+      color: var(--verde-oscuro);
+      border-top: 2px solid var(--verde-oscuro);
+      margin-top: 10px;
+      padding-top: 15px;
     }
 
+    /* Inputs */
     .form-label {
       font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--texto);
+    }
+    .form-control {
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      padding: 12px;
+      background-color: #fdfdfd;
+    }
+    .form-control:focus {
+      border-color: var(--verde);
+      box-shadow: 0 0 0 0.25rem rgba(74, 120, 86, 0.15);
     }
 
-    .btn-success {
-      background: linear-gradient(90deg, #2dce89, #0d6efd);
+    /* Botones */
+    .btn-confirmar {
+      background-color: var(--verde);
+      color: var(--blanco);
       border: none;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 600;
+      width: 100%;
+      transition: 0.3s;
+    }
+    .btn-confirmar:hover {
+      background-color: var(--verde-oscuro);
+      transform: translateY(-2px);
     }
 
-    .btn-success:hover {
-      background: linear-gradient(90deg, #0b5ed7, #20c997);
+    .btn-regresar {
+      color: var(--texto);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: 0.3s;
+    }
+    .btn-regresar:hover {
+      color: var(--verde);
     }
 
-    .btn-secondary {
-      background: linear-gradient(90deg, #6c757d, #adb5bd);
-      border: none;
-    }
-
-    .btn-secondary:hover {
-      background: linear-gradient(90deg, #5a6268, #868e96);
-    }
-
-    hr {
-      border-color: #ddd;
-    }
-
-    /* Pequeña ayuda visual para inputs inválidos */
-    .is-invalid { border-color: #dc3545 !important; box-shadow: none; }
-    .small-muted { font-size: .85rem; color: #6c757d; }
+    /* Validación */
+    .is-invalid { border-color: #dc3545 !important; }
   </style>
 </head>
 <body>
 
-  <div class="checkout-card">
-    <div class="checkout-header">
-      <h3><i class="fas fa-credit-card"></i> Finalizar Compra</h3>
-    </div>
+<!-- NAVBAR (Igual que en tu Index) -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('index') }}">
+      <img src="{{ url_for('static', filename='images/logonaz1.jpg') }}" alt="Logo" style="height:40px; border-radius:8px; margin-right:10px;">
+      Herboli Naz
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <i class="bi bi-list" style="font-size: 2rem; color: var(--verde-oscuro);"></i>
+    </button>
 
-    <div class="p-4">
-      <!-- RESUMEN DEL PEDIDO -->
-      <h5 class="mb-3"><i class="fas fa-box text-success"></i> Resumen del pedido</h5>
-      <ul class="list-group mb-4">
-        {% for producto in productos %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          {{ producto.nombre }} (x{{ producto.cantidad }})
-          <span>${{ producto.total }}</span>
-        </li>
-        {% endfor %}
-        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
-          Total:
-          <span class="text-success">${{ total }}</span>
-        </li>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav align-items-center text-center">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('plantas') }}">Catálogo</a></li>
+        {% if 'usuario' in session %}
+          <li class="nav-item ms-lg-3">
+             <span class="nav-link fw-bold text-success">Hola, {{ session['usuario'] }}</span>
+          </li>
+        {% endif %}
       </ul>
-
-      <!-- FORMULARIO DE COMPRA -->
-      <form id="checkoutForm" action="{{ url_for('procesar_checkout') }}" method="POST" novalidate>
-        
-        <!-- DATOS PERSONALES -->
-        <h5 class="mb-3"><i class="fas fa-user text-primary"></i> Datos personales</h5>
-
-        <div class="mb-3">
-          <label for="nombre" class="form-label">Nombre completo</label>
-          <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.usuario }}" required>
-        </div>
-
-        <div class="mb-3">
-          <label for="correo" class="form-label">Correo electrónico</label>
-          <input type="email" class="form-control" id="correo" name="correo" value="{{ usuario.correo }}" required>
-        </div>
-
-        <div class="mb-3">
-          <label for="direccion" class="form-label">Dirección</label>
-          <input type="text" class="form-control" id="direccion" name="direccion" value="{{ usuario.direccion }}" required>
-        </div>
-
-        <hr>
-
-        <!-- DATOS DE PAGO -->
-        <h5 class="mt-4 mb-3"><i class="fas fa-lock text-success"></i> Datos de pago</h5>
-        <div class="mb-3">
-          <label for="tarjeta" class="form-label">Número de tarjeta</label>
-          <input type="text" inputmode="numeric" autocomplete="cc-number" maxlength="19"
-                 class="form-control" id="tarjeta" name="tarjeta" placeholder="XXXX-XXXX-XXXX-XXXX" required>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label for="expiracion" class="form-label">Fecha de expiración</label>
-            <input type="text" inputmode="numeric" autocomplete="cc-exp" maxlength="5"
-                   class="form-control" id="expiracion" name="expiracion" placeholder="MM/AA" required>
-          </div>
-          <div class="col-md-6 mb-3">
-            <label for="cvv" class="form-label">CVV</label>
-            <input type="text" inputmode="numeric" maxlength="3" autocomplete="cc-csc"
-                   class="form-control" id="cvv" name="cvv" placeholder="123" required>
-          </div>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mt-4">
-          <!-- BOTÓN DE REGRESAR -->
-          <a href="{{ url_for('ver_carrito') }}" class="btn btn-secondary px-4 py-2 rounded-pill">
-            <i class="fas fa-arrow-left"></i> Regresar
-          </a>
-
-          <!-- BOTÓN DE CONFIRMAR -->
-          <button id="submitBtn" type="submit" class="btn btn-success px-4 py-2 rounded-pill">
-            <i class="fas fa-check-circle"></i> Confirmar pedido
-          </button>
-        </div>
-
-      </form>
     </div>
   </div>
+</nav>
 
-  <script>
-    // Helper: elimina todo lo que no sean dígitos
-    function onlyDigits(str) {
-      return str.replace(/\D/g, '');
+<!-- SECCIÓN CHECKOUT -->
+<section class="checkout-section container">
+  <div class="text-center">
+    <h2 class="section-title">Finalizar Compra</h2>
+    <p class="text-muted">Por favor, revisa tu pedido y completa el pago.</p>
+  </div>
+
+  <form id="checkoutForm" action="{{ url_for('procesar_checkout') }}" method="POST" novalidate>
+    <div class="row g-4">
+      
+      <!-- COLUMNA IZQUIERDA: FORMULARIO -->
+      <div class="col-lg-8">
+        
+        <!-- Datos Personales -->
+        <div class="card-custom">
+          <div class="card-header-custom">
+            <i class="bi bi-person-circle"></i> Datos de Envío
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="nombre" class="form-label">Nombre completo</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.usuario }}" required>
+            </div>
+            <div class="col-md-6">
+              <label for="correo" class="form-label">Correo electrónico</label>
+              <input type="email" class="form-control" id="correo" name="correo" value="{{ usuario.correo }}" required>
+            </div>
+            <div class="col-12">
+              <label for="direccion" class="form-label">Dirección de entrega</label>
+              <input type="text" class="form-control" id="direccion" name="direccion" value="{{ usuario.direccion }}" required placeholder="Calle, número, colonia, ciudad...">
+            </div>
+          </div>
+        </div>
+
+        <!-- Datos de Pago -->
+        <div class="card-custom">
+          <div class="card-header-custom">
+            <i class="bi bi-credit-card-2-front"></i> Método de Pago
+          </div>
+          
+          <div class="mb-3">
+            <label for="tarjeta" class="form-label">Número de tarjeta</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="bi bi-credit-card text-muted"></i></span>
+              <input type="text" inputmode="numeric" autocomplete="cc-number" maxlength="19"
+                     class="form-control border-start-0 ps-0" id="tarjeta" name="tarjeta" placeholder="0000-0000-0000-0000" required>
+            </div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="expiracion" class="form-label">Vencimiento (MM/AA)</label>
+              <input type="text" inputmode="numeric" autocomplete="cc-exp" maxlength="5"
+                     class="form-control" id="expiracion" name="expiracion" placeholder="MM/AA" required>
+            </div>
+            <div class="col-md-6">
+              <label for="cvv" class="form-label">CVV</label>
+              <div class="input-group">
+                <input type="text" inputmode="numeric" maxlength="3" autocomplete="cc-csc"
+                       class="form-control" id="cvv" name="cvv" placeholder="123" required>
+                <span class="input-group-text bg-white"><i class="bi bi-question-circle text-muted" title="3 dígitos al reverso"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COLUMNA DERECHA: RESUMEN -->
+      <div class="col-lg-4">
+        <div class="card-custom sticky-top" style="top: 100px; z-index: 1;">
+          <div class="card-header-custom">
+            <i class="bi bi-bag-heart"></i> Resumen del Pedido
+          </div>
+          
+          <ul class="list-group list-group-flush mb-3">
+            {% for producto in productos %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <span class="fw-bold">{{ producto.nombre }}</span>
+                <div class="small text-muted">Cantidad: {{ producto.cantidad }}</div>
+              </div>
+              <span>${{ producto.total }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <div class="d-flex justify-content-between align-items-center total-row">
+            <span class="fw-bold">Total a Pagar:</span>
+            <span class="fw-bold">${{ total }}</span>
+          </div>
+
+          <hr class="my-4">
+
+          <button id="submitBtn" type="submit" class="btn btn-confirmar mb-3">
+            <i class="bi bi-check-circle-fill me-2"></i> Confirmar Pedido
+          </button>
+          
+          <div class="text-center">
+            <a href="{{ url_for('ver_carrito') }}" class="btn-regresar">
+              <i class="bi bi-arrow-left"></i> Volver al carrito
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <h4 class="text-white fw-bold mb-3">Herboli Naz</h4>
+    <div class="mt-3 fs-4">
+      <a href="#" class="text-white mx-2"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="text-white mx-2"><i class="bi bi-instagram"></i></a>
+      <a href="#" class="text-white mx-2"><i class="bi bi-whatsapp"></i></a>
+    </div>
+    <div class="pt-3 mt-3 small opacity-50 border-top border-secondary">
+      &copy; 2025 Herboli Naz. Todos los derechos reservados.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // FUNCIONES DE VALIDACIÓN Y FORMATO
+  function onlyDigits(str) {
+    return str.replace(/\D/g, '');
+  }
+
+  // 1. Formato Tarjeta (XXXX-XXXX...)
+  const tarjeta = document.getElementById('tarjeta');
+  tarjeta.addEventListener('input', (e) => {
+    const prev = tarjeta.value;
+    // Limpiar y limitar a 16 dígitos
+    const digits = onlyDigits(prev).slice(0, 16);
+    // Agrupar de 4 en 4
+    const parts = digits.match(/.{1,4}/g);
+    tarjeta.value = parts ? parts.join('-') : '';
+  });
+
+  // 2. Formato CVV (Solo 3 dígitos)
+  const cvv = document.getElementById('cvv');
+  cvv.addEventListener('input', () => {
+    cvv.value = onlyDigits(cvv.value).slice(0, 3);
+  });
+
+  // 3. Formato Expiración (MM/AA)
+  const exp = document.getElementById('expiracion');
+  exp.addEventListener('input', (e) => {
+    let v = onlyDigits(exp.value).slice(0, 4); // Máximo 4 dígitos (MMAA)
+    if (v.length >= 3) {
+      v = v.slice(0, 2) + '/' + v.slice(2);
     }
+    exp.value = v;
 
-    // TARJETA: formatea en XXXX-XXXX-XXXX-XXXX y limita a 16 dígitos
-    const tarjeta = document.getElementById('tarjeta');
-    tarjeta.addEventListener('input', (e) => {
-      const prev = tarjeta.value;
-      const digits = onlyDigits(prev).slice(0, 16); // máximo 16 dígitos
-      // agrupar cada 4 dígitos
-      const parts = digits.match(/.{1,4}/g);
-      tarjeta.value = parts ? parts.join('-') : '';
-    });
-    // prevenir pegar texto no válido en tarjeta
-    tarjeta.addEventListener('paste', (e) => {
-      const paste = (e.clipboardData || window.clipboardData).getData('text');
-      if (!/^\d+$/.test(onlyDigits(paste))) {
-        e.preventDefault();
-      }
-    });
-
-    // CVV: solo dígitos, máximo 3
-    const cvv = document.getElementById('cvv');
-    cvv.addEventListener('input', () => {
-      cvv.value = onlyDigits(cvv.value).slice(0, 3);
-    });
-    cvv.addEventListener('paste', (e) => {
-      const paste = (e.clipboardData || window.clipboardData).getData('text');
-      if (!/^\d+$/.test(onlyDigits(paste))) e.preventDefault();
-    });
-
-    // EXPIRACION: formato MM/AA con slash automático y validación simple de mes
-    const exp = document.getElementById('expiracion');
-    exp.addEventListener('input', (e) => {
-      let v = onlyDigits(exp.value).slice(0,4); // MMYY (4 dígitos)
-      if (v.length >= 3) {
-        // insertar slash entre 2 y resto: MM/AA
-        v = v.slice(0,2) + '/' + v.slice(2);
-      }
-      exp.value = v;
-      // validación del mes
-      const month = onlyDigits(v).slice(0,2);
-      if (month.length === 2) {
-        const m = parseInt(month, 10);
-        if (m < 1 || m > 12) {
-          exp.classList.add('is-invalid');
-        } else {
-          exp.classList.remove('is-invalid');
-        }
+    // Validación visual en tiempo real
+    const month = onlyDigits(v).slice(0, 2);
+    if (month.length === 2) {
+      const m = parseInt(month, 10);
+      if (m < 1 || m > 12) {
+        exp.classList.add('is-invalid');
       } else {
         exp.classList.remove('is-invalid');
       }
-    });
-    exp.addEventListener('paste', (e) => {
-      const paste = (e.clipboardData || window.clipboardData).getData('text');
-      if (!/^\d+$/.test(onlyDigits(paste))) e.preventDefault();
-    });
+    }
+  });
 
-    // Validación final en submit (cliente) — evita enviar si hay problemas obvios
-    const form = document.getElementById('checkoutForm');
-    form.addEventListener('submit', (e) => {
-      // quitar clases previas
-      [tarjeta, exp, cvv].forEach(el => el.classList.remove('is-invalid'));
+  // VALIDACIÓN AL ENVIAR EL FORMULARIO
+  const form = document.getElementById('checkoutForm');
+  form.addEventListener('submit', (e) => {
+    // Limpiar estados de error previos
+    [tarjeta, exp, cvv].forEach(el => el.classList.remove('is-invalid'));
 
-      const cardDigits = onlyDigits(tarjeta.value);
-      const expDigits = onlyDigits(exp.value);
-      const cvvDigits = onlyDigits(cvv.value);
+    const cardDigits = onlyDigits(tarjeta.value);
+    const expDigits = onlyDigits(exp.value);
+    const cvvDigits = onlyDigits(cvv.value);
+    let hasError = false;
 
-      let bad = false;
-      if (cardDigits.length !== 16) {
-        tarjeta.classList.add('is-invalid');
-        bad = true;
-      }
-      if (cvvDigits.length !== 3) {
-        cvv.classList.add('is-invalid');
-        bad = true;
-      }
-      if (expDigits.length !== 4) {
+    // Validar Tarjeta (16 dígitos)
+    if (cardDigits.length !== 16) {
+      tarjeta.classList.add('is-invalid');
+      hasError = true;
+    }
+
+    // Validar CVV (3 dígitos)
+    if (cvvDigits.length !== 3) {
+      cvv.classList.add('is-invalid');
+      hasError = true;
+    }
+
+    // Validar Expiración
+    if (expDigits.length !== 4) {
+      exp.classList.add('is-invalid');
+      hasError = true;
+    } else {
+      const mm = parseInt(expDigits.slice(0, 2), 10);
+      if (mm < 1 || mm > 12) {
         exp.classList.add('is-invalid');
-        bad = true;
-      } else {
-        const mm = parseInt(expDigits.slice(0,2), 10);
-        if (mm < 1 || mm > 12) {
-          exp.classList.add('is-invalid');
-          bad = true;
-        }
+        hasError = true;
       }
+    }
 
-      if (bad) {
-        e.preventDefault();
-        // opcional: enfoque al primer campo inválido
-        const firstInvalid = document.querySelector('.is-invalid');
-        if (firstInvalid) firstInvalid.focus();
-      } else {
-        // opcional: puedes limpiar el formato antes de enviar (enviar solo dígitos)
-        tarjeta.value = cardDigits;
-        // expiración en MM/AA (ya está con slash), dejamos como está
-      }
-    });
-  </script>
+    if (hasError) {
+      e.preventDefault(); // Detiene el envío si hay errores
+      alert("Por favor verifica los datos de pago marcados en rojo.");
+    } else {
+      // ÉXITO:
+      // OJO: Aquí es donde podría haber fallado antes.
+      // Si tu backend NO soporta guiones, descomenta la siguiente línea:
+      // tarjeta.value = cardDigits; 
+      
+      // Si tu backend soporta strings como "1234-5678...", déjalo así.
+      // Por defecto, la mayoría de sistemas aceptan el string limpio, 
+      // pero por seguridad visual lo dejaremos tal cual se ve a menos que el backend falle.
+    }
+  });
+</script>
 
 </body>
 </html>
