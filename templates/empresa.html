@@ -1,189 +1,318 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Contacto - Herbolia Naz Medi</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+  <meta charset="UTF-8">
+  <!-- META TAG CRÍTICO PARA CELULARES -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Contacto - Herboli Naz</title>
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
   <style>
-    /* ===== PALETA TIPO VIVERO ===== */
+    /* ===== VARIABLES DE DISEÑO ===== */
     :root {
+      --verde-oscuro: #2e523e;
       --verde: #4a7856;
-      --verde-claro: #9cc69b;
-      --beige: #f5f1e6;
-      --madera: #e6d8b8;
+      --verde-claro: #cfdec4;
+      --beige: #F9F7F2;
       --blanco: #ffffff;
-      --texto: #2c2c2c;
-      --sombra: 0 10px 25px rgba(0, 0, 0, 0.1);
-      --radius: 18px;
+      --texto: #2c3e33;
+      --radius: 20px;
     }
 
     body {
-      background-color: #f7f9fc;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #333;
+      font-family: 'Poppins', sans-serif;
+      /* Fondo unificado con las otras páginas */
+      background: linear-gradient(135deg, rgba(46, 82, 62, 0.85) 0%, rgba(74, 120, 86, 0.5) 100%),
+                  url('{{ url_for("static", filename="images/vivero-bg.jpg") }}') center/cover no-repeat;
+      background-attachment: fixed;
+      color: var(--texto);
+      min-height: 100vh;
+      padding-top: 80px; /* Espacio para el navbar fijo */
+      padding-bottom: 40px;
     }
 
-    /* ===== BOTÓN PRINCIPAL ===== */
-    .btn-home {
-      display: inline-block;
-      margin: 1rem auto;
-      padding: 0.5rem 1.5rem;
-      font-size: 1rem;
-      font-weight: 600;
-      color: white;
-      background: linear-gradient(
-        rgba(74, 120, 86, 0.6),
-        rgba(74, 120, 86, 0.6)
-      );
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      padding: 10px 0;
+    }
+
+    .navbar-brand {
+      font-weight: 800;
+      color: var(--verde-oscuro) !important;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-link {
+      color: var(--texto) !important;
+      font-weight: 500;
+    }
+
+    .navbar-toggler {
       border: none;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-    .btn-home:hover {
-      opacity: 0.85;
+      padding: 0;
     }
 
-    /* ===== ENCABEZADO CAMBIADO A VERDE ===== */
-    .header-section {
-      background: linear-gradient(
-        rgba(74, 120, 86, 0.9),
-        rgba(74, 120, 86, 0.9)
-      );
-      color: white;
-      padding: 3rem 0;
+    /* ===== CONTENEDOR PRINCIPAL (TARJETA) ===== */
+    .contact-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      margin-top: 20px;
+    }
+
+    .page-title {
       text-align: center;
-      box-shadow: var(--sombra);
-      margin-bottom: 2rem;
+      color: var(--blanco);
+      margin-bottom: 30px;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    
+    .page-title h1 {
+      font-weight: 800;
+      font-size: 2.5rem;
     }
 
-    .header-section h1 {
+    /* ===== SECCIÓN INFORMACIÓN ===== */
+    .info-item {
+      margin-bottom: 25px;
+    }
+
+    .info-item h5 {
+      color: var(--verde);
       font-weight: 700;
-      font-size: 3rem;
-      letter-spacing: 2px;
-      margin-bottom: 0.5rem;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .header-section p {
-      font-size: 1.25rem;
-      font-style: italic;
+    .info-item p, .info-item a {
+      color: #555;
+      font-size: 1rem;
+      text-decoration: none;
+      margin-left: 32px; /* Alineado con el texto del título */
+      display: block;
     }
 
-    /* ===== SECCIONES DE INFO ===== */
-    .info-section {
-      max-width: 900px;
-      margin: 0 auto 3rem auto;
-      background: white;
-      border-radius: 10px;
-      padding: 2.5rem 3rem;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-
-    .info-section h2 {
-      margin-bottom: 1.5rem;
-      border-bottom: 3px solid var(--verde);
-      padding-bottom: 0.5rem;
-      font-weight: 600;
-      color: var(--verde);
-    }
-
-    .info-section strong {
-      color: var(--verde);
-    }
-
-    .info-section p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      margin-bottom: 1rem;
+    .info-item a:hover {
+      color: var(--verde-oscuro);
+      text-decoration: underline;
     }
 
     /* ===== MAPA ===== */
     .map-container {
-      text-align: center;
-      margin-bottom: 3rem;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
+      width: 100%;
+      height: 100%;
+      min-height: 350px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border: 5px solid var(--verde-claro);
     }
 
     iframe {
       width: 100%;
-      height: 400px;
+      height: 100%;
       border: none;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    /* ===== SECCIÓN "POR QUÉ ELEGIRNOS" ===== */
+    .why-us {
+      background-color: var(--beige);
+      border-radius: 20px;
+      padding: 30px;
+      margin-top: 40px;
+    }
+
+    .why-us h3 {
+      color: var(--verde-oscuro);
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .check-list li {
+      list-style: none;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .check-list i {
+      color: var(--verde);
+      font-size: 1.2rem;
     }
 
     /* ===== FOOTER ===== */
-    .footer-note {
+    footer {
       text-align: center;
+      color: rgba(255,255,255,0.7);
+      margin-top: 40px;
       font-size: 0.9rem;
-      background: linear-gradient(135deg, #4a7856, #9cc69b);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 3rem;
-      font-weight: 600;
     }
 
-    a {
-      color: var(--verde);
-      font-weight: bold;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
+    /* ===== MÓVIL ===== */
+    @media (max-width: 768px) {
+      body {
+        background-attachment: scroll;
+      }
+      .contact-card {
+        padding: 25px 20px;
+      }
+      .map-container {
+        min-height: 250px; /* Mapa más pequeño en celular */
+        margin-top: 30px;
+      }
+      .page-title h1 {
+        font-size: 2rem;
+      }
+      .navbar-collapse {
+        background: #fff;
+        padding: 20px;
+        border-radius: 20px;
+        margin-top: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      }
     }
   </style>
 </head>
 <body>
 
-  <div style="text-align:center; margin-top: 20px;">
-    <a href="{{ url_for('index') }}" class="btn-home">Regresar al Inicio</a>
+  <!-- NAVBAR FIXED -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <i class="bi bi-flower1"></i> Herboli Naz
+      </a>
+
+      <!-- Botón Hamburguesa -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="bi bi-list" style="font-size: 2.2rem; color: var(--verde-oscuro);"></i>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center text-center">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('plantas') }}">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link fw-bold" href="{{ url_for('empresa') }}">Nosotros</a></li>
+          
+          {% if session.get('usuario') %}
+            <li class="nav-item mt-2 mt-lg-0 ms-lg-2">
+              <span class="badge bg-success rounded-pill px-3 py-2">Hola, {{ session['usuario'] }}</span>
+            </li>
+            <li class="nav-item mt-2 mt-lg-0 ms-lg-2">
+              <a href="{{ url_for('logout') }}" class="nav-link text-danger">Salir</a>
+            </li>
+          {% else %}
+            <li class="nav-item mt-2 mt-lg-0 ms-lg-2">
+              <a href="{{ url_for('login') }}" class="btn btn-outline-success rounded-pill px-4 w-100">Ingresar</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    
+    <!-- Título de la página -->
+    <div class="page-title">
+      <h1>Contáctanos</h1>
+      <p>Estamos aquí para ayudarte a reverdecer tu mundo</p>
+    </div>
+
+    <!-- Tarjeta Principal -->
+    <div class="contact-card">
+      <div class="row align-items-center">
+        
+        <!-- Columna Izquierda: Información -->
+        <div class="col-12 col-md-6">
+          <h2 class="mb-4 fw-bold text-dark">Información</h2>
+          
+          <div class="info-item">
+            <h5><i class="bi bi-geo-alt-fill"></i> Dirección</h5>
+            <p>Avenida Perseos 301, Primo Verdad Inegi<br>Aguascalientes, CP 20267</p>
+          </div>
+
+          <div class="info-item">
+            <h5><i class="bi bi-telephone-fill"></i> Teléfono</h5>
+            <a href="tel:+524495028052">+52 449 502 80 52</a>
+          </div>
+
+          <div class="info-item">
+            <h5><i class="bi bi-envelope-fill"></i> Correo</h5>
+            <a href="mailto:contacto@medi.com">contacto@medi.com</a>
+          </div>
+
+          <div class="info-item">
+            <h5><i class="bi bi-clock-fill"></i> Horario</h5>
+            <p>Lunes a Viernes: 9:00 - 18:00 hrs</p>
+          </div>
+
+          <div class="mt-4">
+            <a href="https://wa.me/524495028052" class="btn btn-success rounded-pill px-4 me-2">
+              <i class="bi bi-whatsapp"></i> WhatsApp
+            </a>
+            <a href="https://www.instagram.com/herboli_naz" class="btn btn-outline-success rounded-pill px-4">
+              <i class="bi bi-instagram"></i> Instagram
+            </a>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Mapa -->
+        <div class="col-12 col-md-6">
+          <div class="map-container">
+            <iframe
+              src="https://www.google.com/maps?q=Avenida+Perseos+301,+Primo+Verdad+Inegi,+Aguascalientes,+CP+20267&output=embed"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+        </div>
+
+      </div> <!-- Fin Row -->
+
+      <!-- Sección Inferior: Por qué elegirnos -->
+      <div class="why-us">
+        <h3>¿Por qué elegir Herbolia Naz?</h3>
+        <div class="row">
+          <div class="col-md-6">
+            <ul class="check-list p-0">
+              <li><i class="bi bi-check-circle-fill"></i> Productos 100% naturales y certificados.</li>
+              <li><i class="bi bi-check-circle-fill"></i> Asesoría personalizada con expertos.</li>
+              <li><i class="bi bi-check-circle-fill"></i> Compromiso ambiental sostenible.</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <ul class="check-list p-0">
+              <li><i class="bi bi-check-circle-fill"></i> Entrega rápida y segura a todo México.</li>
+              <li><i class="bi bi-check-circle-fill"></i> Garantía de satisfacción total.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- Fin Contact Card -->
+
   </div>
 
-  <header class="header-section">
-    <h1>Herbolia Naz Medi S.A. de C.V.</h1>
-    <p>Comprometidos con la naturaleza Ambiental</p>
-  </header>
-
-  <section class="info-section">
-    <h2>Información de Contacto</h2>
-    <p><strong>Dirección:</strong> Avenida Perseos 301, Primo Verdad Inegi, Aguascalientes, CP 20267</p>
-    <p><strong>Teléfono:</strong> +52 449 502 80 52</p>
-    <p><strong>Email:</strong> <a href="mailto:contacto@medi.com">contacto@medi.com</a></p>
-    <p><strong>Horario de atención:</strong> Lunes a Viernes de 9:00 a 18:00 hrs</p>
-    <p><strong>Redes Sociales:</strong> 
-      <a href="https://www.instagram.com/herboli_naz" target="_blank">Instagram</a> | 
-      <a href="https://wa.me/524495028052" target="_blank">WhatsApp</a>
-    </p>
-    <p>En Herbolia Naz Medi nos especializamos en productos para ayudar al medioambiente. Nuestro equipo está disponible para asesorarte y ayudarte a elegir las mejores opciones para ti.</p>
-  </section>
-
-  <section class="map-container">
-    <h2>Ubicación</h2>
-    <iframe
-      src="https://www.google.com/maps?q=Avenida+Perseos+301,+Primo+Verdad+Inegi,+Aguascalientes,+CP+20267&output=embed"
-      allowfullscreen=""
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-    ></iframe>
-  </section>
-
-  <section class="info-section" style="background:#e8f5e9;">
-    <h2>¿Por qué elegir Herbolia Naz?</h2>
-    <ul style="font-size:1.1rem; line-height:1.8; list-style-type: disc; padding-left: 20px;">
-      <li>Productos 100% naturales y certificados.</li>
-      <li>Asesoría personalizada con arboricultores.</li>
-      <li>Compromiso con el medio ambiente y sostenibilidad.</li>
-      <li>Entrega rápida y segura a todo México.</li>
-      <li>Política de satisfacción garantizada.</li>
-    </ul>
-  </section>
-
-  <footer class="footer-note">
-    &copy; 2025 Herbolia Naz Medi S.A. de C.V. Todos los derechos reservados.
+  <footer>
+    <p>&copy; 2025 Herbolia Naz Medi S.A. de C.V. Todos los derechos reservados.</p>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

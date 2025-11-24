@@ -2,152 +2,265 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Editar Perfil</title>
+  <!-- META TAG ESENCIAL PARA CELULAR -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Editar Perfil - Herboli Naz</title>
+  
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
   <style>
+    /* ===== VARIABLES (MISMA PALETA) ===== */
+    :root {
+      --verde-oscuro: #2e523e;
+      --verde: #4a7856;
+      --verde-claro: #cfdec4;
+      --beige: #F9F7F2;
+      --blanco: #ffffff;
+      --texto: #2c3e33;
+      --radius: 20px;
+    }
+
     body {
-      background: linear-gradient(135deg, #2dce89, #0d6efd);
-      background-size: 400% 400%;
-      animation: gradientAnimation 15s ease infinite;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #212529;
+      font-family: 'Poppins', sans-serif;
+      /* Fondo igual al resto de las páginas */
+      background: linear-gradient(135deg, rgba(46, 82, 62, 0.85) 0%, rgba(74, 120, 86, 0.5) 100%),
+                  url('{{ url_for("static", filename="images/vivero-bg.jpg") }}') center/cover no-repeat;
+      background-attachment: fixed;
+      color: var(--texto);
+      min-height: 100vh;
+      padding-top: 80px; /* Espacio para el navbar */
+      padding-bottom: 40px;
     }
-  
-    @keyframes gradientAnimation {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      padding: 10px 0;
     }
-  
-    .form-container {
-      max-width: 600px;
-      margin: 80px auto;
-      background-color: #ffffff;
-      padding: 40px 30px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+    .navbar-brand {
+      font-weight: 800;
+      color: var(--verde-oscuro) !important;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-  
-    h3 {
-      color: #2dce89;
-      font-weight: 700;
+
+    .nav-link {
+      color: var(--texto) !important;
+      font-weight: 500;
+    }
+
+    .navbar-toggler { border: none; padding: 0; }
+
+    /* ===== TARJETA DE EDICIÓN ===== */
+    .edit-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
+      padding: 40px 35px;
+      width: 100%;
+      max-width: 700px;
+      margin: 20px auto;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    .edit-card h3 {
+      color: var(--verde-oscuro);
+      font-weight: 800;
       text-align: center;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: var(--verde);
+      font-size: 0.9rem;
       margin-bottom: 30px;
     }
-  
+
+    /* ===== FORMULARIOS ===== */
     label {
+      font-size: 0.9rem;
       font-weight: 600;
-      color: #2dce89;
+      color: var(--verde-oscuro);
+      margin-bottom: 8px;
+      display: block;
+      margin-left: 10px;
     }
-  
+
     .form-control {
-      border-radius: 8px;
-      border: 1px solid #ced4da;
-      padding: 10px 15px;
-      font-size: 15px;
+      background-color: var(--beige);
+      border: 2px solid transparent;
+      border-radius: 50px; /* Píldora */
+      padding: 12px 20px;
+      color: var(--texto);
+      font-weight: 500;
+      transition: all 0.3s ease;
     }
-  
-    .btn-group-custom {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 30px;
+
+    .form-control:focus {
+      background-color: var(--blanco);
+      border-color: var(--verde);
+      box-shadow: 0 0 0 4px rgba(74, 120, 86, 0.1);
+      outline: none;
     }
-  
-    .btn-success {
-      background-color: #2dce89;
+
+    /* ===== BOTONES ===== */
+    .btn-save {
+      background-color: var(--verde-oscuro);
+      color: var(--blanco);
       border: none;
+      border-radius: 50px;
+      padding: 12px 30px;
+      font-weight: 700;
+      transition: all 0.3s;
+      width: 100%;
+    }
+
+    .btn-save:hover {
+      background-color: var(--verde);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(46, 82, 62, 0.3);
+    }
+
+    .btn-cancel {
+      background-color: transparent;
+      border: 2px solid var(--verde);
+      color: var(--verde);
+      border-radius: 50px;
+      padding: 12px 30px;
       font-weight: 600;
-      color: #fff;
+      transition: all 0.3s;
+      width: 100%;
+      text-align: center;
+      display: inline-block;
+      text-decoration: none;
     }
-  
-    .btn-success:hover {
-      background-color: #28b67a;
+
+    .btn-cancel:hover {
+      background-color: var(--verde);
+      color: var(--blanco);
     }
-  
-    .btn-outline-primary {
-      border-color: #2dce89;
-      color: #2dce89;
-      font-weight: 600;
-    }
-  
-    .btn-outline-primary:hover {
-      background-color: #2dce89;
-      color: #fff;
-    }
-  
-    .btn-secondary {
-      background-color: #6c757d;
-      border: none;
-      color: #fff;
-      font-weight: 600;
-    }
-  
-    .btn-secondary:hover {
-      background-color: #5a6268;
+
+    /* ===== MÓVIL ===== */
+    @media (max-width: 768px) {
+      body {
+        background-attachment: scroll;
+      }
+      .edit-card {
+        padding: 30px 20px;
+      }
+      .btn-group-custom {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .navbar-collapse {
+        background: #fff;
+        padding: 20px;
+        border-radius: 20px;
+        margin-top: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="form-container">
-    <h3>Editar Información de Perfil</h3>
-
-    <!-- FORMULARIO CON VALIDACIONES -->
-    <form method="POST" class="needs-validation" novalidate>
-
-      <!-- Usuario -->
-      <div class="form-group mb-3">
-        <label for="usuario">Nombre de usuario</label>
-        <input type="text" class="form-control solo-letras" name="usuario"
-               value="{{ cliente.usuario }}" required minlength="3" maxlength="40"
-               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s]+">
-        <div class="invalid-feedback">Ingrese un nombre válido (solo letras y números).</div>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <i class="bi bi-flower1"></i> Herboli Naz
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="bi bi-list" style="font-size: 2.2rem; color: var(--verde-oscuro);"></i>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center text-center">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('cliente_dashboard') }}">Mi Cuenta</a></li>
+          <li class="nav-item mt-2 mt-lg-0 ms-lg-2">
+            <a class="nav-link text-danger" href="{{ url_for('logout') }}">Salir</a>
+          </li>
+        </ul>
       </div>
+    </div>
+  </nav>
 
-      <!-- Correo -->
-      <div class="form-group mb-3">
-        <label for="correo">Correo electrónico</label>
-        <input type="email" class="form-control" name="correo" id="correo"
-               value="{{ cliente.correo or '' }}" required
-               pattern="^[\w\.-]+@[\w\.-]+\.\w{2,4}$">
-        <div class="invalid-feedback">Ingrese un correo electrónico válido.</div>
-      </div>
+  <div class="container">
+    <div class="edit-card">
+      <h3>Editar Perfil</h3>
+      <p class="subtitle">Actualiza tu información personal</p>
 
-      <!-- Dirección -->
-      <div class="form-group mb-3">
-        <label for="direccion">Dirección</label>
-        <input type="text" class="form-control" name="direccion"
-               value="{{ cliente.direccion or '' }}" minlength="4" maxlength="80">
-        <div class="invalid-feedback">La dirección debe tener al menos 4 caracteres.</div>
-      </div>
+      <!-- FORMULARIO CON VALIDACIONES -->
+      <form method="POST" class="needs-validation" novalidate>
 
-      <!-- Teléfono -->
-      <div class="form-group mb-4">
-        <label for="telefono">Teléfono</label>
-        <input type="text" class="form-control solo-numeros" name="telefono"
-               value="{{ cliente.telefono or '' }}" required minlength="7" maxlength="15"
-               pattern="[0-9]{7,15}">
-        <div class="invalid-feedback">Ingrese un teléfono válido (solo números 7–15 dígitos).</div>
-      </div>
+        <div class="row g-3">
+          <!-- Usuario -->
+          <div class="col-12 col-md-6">
+            <label for="usuario"><i class="bi bi-person me-1"></i> Usuario</label>
+            <input type="text" class="form-control solo-letras" name="usuario" id="usuario"
+                   value="{{ cliente.usuario }}" required minlength="3" maxlength="40"
+                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s]+">
+            <div class="invalid-feedback">Solo letras y números (3-40 caracteres).</div>
+          </div>
 
-      <div class="btn-group-custom">
-        <button type="submit" class="btn btn-success">Guardar cambios</button>
-        <a href="{{ url_for('cliente_dashboard') }}" class="btn btn-outline-primary">Regresar al perfil</a>
-        <a href="{{ url_for('cliente_dashboard') }}" class="btn btn-secondary">Cancelar</a>
-      </div>
+          <!-- Correo -->
+          <div class="col-12 col-md-6">
+            <label for="correo"><i class="bi bi-envelope me-1"></i> Correo</label>
+            <input type="email" class="form-control" name="correo" id="correo"
+                   value="{{ cliente.correo or '' }}" required
+                   pattern="^[\w\.-]+@[\w\.-]+\.\w{2,4}$">
+            <div class="invalid-feedback">Ingresa un correo válido.</div>
+          </div>
 
-    </form>
+          <!-- Teléfono -->
+          <div class="col-12 col-md-6">
+            <label for="telefono"><i class="bi bi-telephone me-1"></i> Teléfono</label>
+            <input type="tel" class="form-control solo-numeros" name="telefono" id="telefono"
+                   value="{{ cliente.telefono or '' }}" required minlength="7" maxlength="15"
+                   pattern="[0-9]{7,15}">
+            <div class="invalid-feedback">Solo números (7-15 dígitos).</div>
+          </div>
 
+          <!-- Dirección (Ancho completo) -->
+          <div class="col-12">
+            <label for="direccion"><i class="bi bi-geo-alt me-1"></i> Dirección</label>
+            <input type="text" class="form-control" name="direccion" id="direccion"
+                   value="{{ cliente.direccion or '' }}" minlength="4" maxlength="80">
+            <div class="invalid-feedback">La dirección es muy corta.</div>
+          </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="row mt-4 g-3">
+          <div class="col-12 col-md-6 order-md-2">
+            <button type="submit" class="btn btn-save">
+              <i class="bi bi-check-lg"></i> Guardar Cambios
+            </button>
+          </div>
+          <div class="col-12 col-md-6 order-md-1">
+            <a href="{{ url_for('cliente_dashboard') }}" class="btn btn-cancel">
+              <i class="bi bi-x-lg"></i> Cancelar
+            </a>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
   </div>
 
-  <!-- JAVASCRIPT DE VALIDACIONES -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- JAVASCRIPT DE VALIDACIONES (Se mantiene igual, funciona perfecto) -->
   <script>
-    /* ============================
-       VALIDACIÓN BOOTSTRAP
-    ============================= */
     (() => {
       const forms = document.querySelectorAll('.needs-validation');
       forms.forEach(form => {
@@ -161,18 +274,12 @@
       });
     })();
 
-    /* ============================
-       SOLO LETRAS (usuario)
-    ============================= */
     document.querySelectorAll('.solo-letras').forEach(input => {
       input.addEventListener('input', () => {
         input.value = input.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s]/g, '');
       });
     });
 
-    /* ============================
-       SOLO NÚMEROS (telefono)
-    ============================= */
     document.querySelectorAll('.solo-numeros').forEach(input => {
       input.addEventListener('input', () => {
         input.value = input.value.replace(/[^0-9]/g, '');
