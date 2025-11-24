@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <!-- META TAG VITAL PARA MÓVILES -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Admin - Herboli Naz</title>
   
@@ -93,17 +92,27 @@
       box-shadow: 0 0 0 3px rgba(74, 120, 86, 0.1);
     }
 
-    /* Input de archivo personalizado */
+    /* ===== INPUT FILE CORREGIDO (Para que no se vea cortado) ===== */
+    input[type="file"].form-control {
+      padding: 0 !important; /* Quita el relleno interno */
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      line-height: normal; /* Asegura altura normal */
+    }
+
     input[type="file"]::file-selector-button {
       background-color: var(--verde);
       color: white;
       border: none;
-      padding: 8px 15px;
-      border-radius: 10px;
+      padding: 12px 20px; /* Botón más alto y ancho */
+      margin-right: 15px;
       cursor: pointer;
-      margin-right: 10px;
       transition: 0.3s;
+      height: 100%; /* Ocupa todo el alto */
+      border-right: 1px solid rgba(0,0,0,0.1);
     }
+
     input[type="file"]::file-selector-button:hover {
       background-color: var(--verde-oscuro);
     }
@@ -141,7 +150,6 @@
       body { background-attachment: scroll; }
       .admin-card { padding: 20px 15px; }
       .btn { width: 100%; margin-bottom: 5px; }
-      /* Hacer que los botones de acción en formularios se apilen */
       .action-buttons { flex-direction: column; gap: 10px; }
     }
   </style>
@@ -244,7 +252,7 @@
       </div>
     </section>
 
-    <!-- SECCIÓN PRODUCTOS (AQUÍ ESTÁ EL CAMBIO DE IMAGEN) -->
+    <!-- SECCIÓN PRODUCTOS -->
     <section id="productos" class="admin-card">
       <h3 class="section-title"><i class="bi bi-tree"></i> Gestión de Productos</h3>
       <p class="small text-muted mb-4">Sube fotos directamente desde tu celular o computadora.</p>
@@ -253,21 +261,23 @@
       <form method="post" action="{{ url_for('agregar_planta') }}" enctype="multipart/form-data" class="p-3 bg-light rounded-4 border">
         <h5 class="text-success fw-bold mb-3">🌱 Agregar Nueva Planta</h5>
         
+        <!-- CORRECCIÓN DE COLUMNAS PARA QUE QUEPA EL BOTÓN DE FOTO -->
         <div class="row g-3">
-          <div class="col-12 col-md-6">
+          <!-- Columna Nombre (5) -->
+          <div class="col-12 col-md-5">
             <label>Nombre de la Planta</label>
             <input type="text" name="nombre" class="form-control" required>
           </div>
           
-          <div class="col-6 col-md-3">
+          <!-- Columna Precio (2 - más chica) -->
+          <div class="col-6 col-md-2">
             <label>Precio ($)</label>
             <input type="number" name="precio" class="form-control" required>
           </div>
 
-          <!-- CAMBIO IMPORTANTE: INPUT FILE -->
-          <div class="col-12 col-md-3">
+          <!-- Columna Foto (5 - más grande para el botón) -->
+          <div class="col-12 col-md-5">
             <label>Foto</label>
-            <!-- accept="image/*" hace que en el cel abra la galería/cámara -->
             <input type="file" name="imagen" class="form-control" accept="image/*" required>
           </div>
 
@@ -290,7 +300,6 @@
       <h5 class="text-muted mb-4">Catálogo Actual</h5>
       
       {% for planta in plantas %}
-      <!-- Formulario individual para editar (MULTIPART TAMBIÉN) -->
       <form method="post" action="{{ url_for('administrar_plantas') }}" enctype="multipart/form-data" class="mb-4">
         <input type="hidden" name="id" value="{{ planta.id }}">
         
@@ -305,7 +314,6 @@
               <div class="mt-2">
                 <label class="small text-muted">Cambiar Foto:</label>
                 <input type="file" name="imagen" class="form-control form-control-sm" accept="image/*">
-                <!-- Input hidden para mantener la imagen vieja si no suben una nueva -->
                 <input type="hidden" name="imagen_anterior" value="{{ planta.imagen }}">
               </div>
             </div>
@@ -351,7 +359,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // LÓGICA DE CLIENTES (Fetch API)
+    // 1. Obtener datos del formulario
     function getFormData() {
       return {
         idCliente: document.getElementById('idCliente').value.trim(),
@@ -361,11 +369,14 @@
       };
     }
 
+    // 2. BUSCAR CLIENTE
     document.getElementById('btnBuscarCliente').addEventListener('click', () => {
       const { idCliente } = getFormData();
       if (!idCliente) return alert('⚠️ Ingresa un ID para buscar.');
       fetch('/cliente/buscar', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idCliente })
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ idCliente })
       })
       .then(res => res.json())
       .then(data => {
@@ -378,32 +389,67 @@
       });
     });
 
+    // 3. GUARDAR (NUEVO)
     document.getElementById('btnGuardarCliente').addEventListener('click', () => {
       const data = getFormData();
       if (!data.nombre) return alert('⚠️ Ingresa el nombre.');
       fetch('/cliente/guardar', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
-      }).then(res => res.json()).then(r => { alert(r.mensaje); if(r.mensaje.includes('correctamente')) location.reload(); });
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(data)
+      }).then(res => res.json()).then(r => { 
+        alert(r.mensaje); 
+        if(r.mensaje.includes('correctamente')) location.reload(); 
+      });
     });
 
+    // 4. MODIFICAR (ESTE ERA EL QUE FALTABA)
+    document.getElementById('btnModificarCliente').addEventListener('click', () => {
+      const data = getFormData();
+      if (!data.idCliente) return alert('⚠️ Ingresa el ID del cliente que quieres modificar.');
+      
+      fetch('/cliente/modificar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(resp => {
+        alert(resp.mensaje); // Muestra mensaje de éxito o error
+        if(resp.mensaje.includes('correctamente')) location.reload();
+      })
+      .catch(() => alert('❌ Error al modificar.'));
+    });
+
+    // 5. ELIMINAR CLIENTE
     document.getElementById('btnEliminarCliente').addEventListener('click', () => {
       const { idCliente } = getFormData();
       if (!idCliente) return alert('⚠️ ID requerido.');
-      if(confirm('¿Eliminar cliente?')) {
+      if(confirm('¿Seguro que quieres eliminar este cliente?')) {
         fetch('/cliente/eliminar', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idCliente })
-        }).then(res => res.json()).then(r => { alert(r.mensaje); location.reload(); });
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' }, 
+          body: JSON.stringify({ idCliente })
+        }).then(res => res.json()).then(r => { 
+          alert(r.mensaje); 
+          location.reload(); 
+        });
       }
     });
-    
-    // ELIMINAR PLANTA
+
+    // 6. ELIMINAR PLANTA
     document.querySelectorAll('.btnEliminarPlanta').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-id');
-        if(confirm('¿Eliminar planta?')) {
+        if(confirm('¿Eliminar planta del catálogo?')) {
           fetch('/planta/eliminar', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id })
-          }).then(res => res.json()).then(r => { alert(r.mensaje); location.reload(); });
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ id })
+          }).then(res => res.json()).then(r => { 
+            alert(r.mensaje); 
+            location.reload(); 
+          });
         }
       });
     });
