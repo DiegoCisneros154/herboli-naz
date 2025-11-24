@@ -2,191 +2,268 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Registrar usuario - EcoVivero</title>
+  <!-- META TAG IMPORTANTE PARA CELULARES -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Registrar Usuario - Herboli Naz</title>
+  
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
   <style>
+    /* ===== VARIABLES (MISMA PALETA) ===== */
+    :root {
+      --verde-oscuro: #2e523e;
+      --verde: #4a7856;
+      --verde-claro: #cfdec4;
+      --beige: #F9F7F2;
+      --blanco: #ffffff;
+      --texto: #2c3e33;
+      --radius: 20px;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to bottom right, #e6f2e6, #d9ead3);
-      color: #2d3a24;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      /* Fondo igual al Login e Index */
+      background: linear-gradient(135deg, rgba(46, 82, 62, 0.85) 0%, rgba(74, 120, 86, 0.6) 100%),
+                  url('{{ url_for("static", filename="images/vivero-bg.jpg") }}') center/cover no-repeat;
+      background-attachment: fixed;
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin: 0;
       padding: 20px;
+      color: var(--texto);
     }
 
+    /* ===== TARJETA DE REGISTRO ===== */
     .register-card {
-      background: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
       padding: 40px 35px;
       width: 100%;
-      max-width: 800px;
+      max-width: 800px; /* Más ancha porque hay más campos */
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
       text-align: center;
-      transition: all 0.3s ease;
+      position: relative;
     }
 
-    .register-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+    .brand-logo {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 18px;
+      margin-bottom: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     h2 {
-      font-weight: 700;
-      margin-bottom: 25px;
-      color: #2e7d32;
-    }
-
-    .icon {
-      font-size: 3.5rem;
-      color: #4caf50;
-      margin-bottom: 10px;
-    }
-
-    label {
-      font-weight: 500;
-      color: #3a3a3a;
-      display: block;
+      color: var(--verde-oscuro);
+      font-weight: 800;
       margin-bottom: 5px;
     }
 
+    p.subtitle {
+      color: var(--verde);
+      font-size: 0.95rem;
+      margin-bottom: 25px;
+      font-weight: 500;
+    }
+
+    /* ===== FORMULARIOS ===== */
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--verde-oscuro);
+      margin-bottom: 6px;
+      display: block;
+      margin-left: 10px;
+      text-align: left;
+    }
+
     .form-control {
-      background: #f4f9f4;
-      border: 1px solid #b3d9b3;
-      color: #2d3a24;
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 15px;
-      width: 100%;
+      background-color: var(--beige);
+      border: 2px solid transparent;
+      border-radius: 50px;
+      padding: 12px 20px;
+      color: var(--texto);
+      font-weight: 500;
+      transition: all 0.3s ease;
     }
 
     .form-control:focus {
-      background: #fff;
-      box-shadow: 0 0 8px #81c784;
+      background-color: var(--blanco);
+      border-color: var(--verde);
+      box-shadow: 0 0 0 4px rgba(74, 120, 86, 0.1);
       outline: none;
     }
 
-    .btn-success {
-      background-color: #388e3c;
-      color: #fff;
+    /* ===== BOTONES ===== */
+    .btn-register {
+      background-color: var(--verde-oscuro);
+      color: var(--blanco);
       border: none;
       border-radius: 50px;
-      font-weight: 600;
-      padding: 12px;
-      transition: all 0.3s ease;
+      padding: 14px;
+      font-weight: 700;
+      width: 100%;
+      transition: all 0.3s;
+      font-size: 1rem;
+      margin-top: 10px;
     }
 
-    .btn-success:hover {
-      background-color: #2e7d32;
+    .btn-register:hover {
+      background-color: var(--verde);
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(56, 142, 60, 0.4);
+      box-shadow: 0 5px 15px rgba(46, 82, 62, 0.3);
     }
 
-    .btn-secondary {
-      background-color: transparent;
-      border: 2px solid #388e3c;
-      border-radius: 50px;
-      padding: 12px;
+    .btn-back {
+      color: var(--verde);
+      text-decoration: none;
+      font-size: 0.9rem;
       font-weight: 600;
-      color: #388e3c;
-      transition: all 0.3s ease;
+      display: inline-block;
+      margin-top: 20px;
+      transition: 0.3s;
     }
 
-    .btn-secondary:hover {
-      background-color: #388e3c;
-      color: #fff;
-      transform: translateY(-2px);
+    .btn-back:hover {
+      color: var(--verde-oscuro);
+      text-decoration: underline;
     }
 
-    .row-custom {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: space-between;
+    /* ALERTAS */
+    .alert-custom-error {
+      background-color: #ffebee;
+      color: #c62828;
+      border-radius: 15px;
+      padding: 10px;
+      font-size: 0.9rem;
+      border: 1px solid #ffcdd2;
+      margin-bottom: 20px;
+    }
+    
+    .alert-custom-success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      border-radius: 15px;
+      padding: 10px;
+      font-size: 0.9rem;
+      border: 1px solid #c8e6c9;
+      margin-bottom: 20px;
     }
 
-    .col-custom {
-      flex: 1 1 48%;
-      min-width: 200px;
-    }
-
-    @media (max-width: 576px) {
-      .col-custom {
-        flex: 1 1 100%;
+    /* ===== MÓVIL ===== */
+    @media (max-width: 768px) {
+      body {
+        background-attachment: scroll;
+        align-items: flex-start; /* Para que si el form es largo se pueda scrollear bien */
+        padding-top: 40px;
+      }
+      .register-card {
+        padding: 30px 20px;
+      }
+      h2 {
+        font-size: 1.8rem;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="register-card">
-    <i class="bi bi-person-plus icon"></i>
-    <h2>Registro de usuario</h2>
 
-    <!-- 🟥 MENSAJES DE ERROR/ÉXITO -->
+  <div class="register-card">
+    <!-- Logo -->
+    <img src="{{ url_for('static', filename='images/logonaz1.jpg') }}" alt="Logo" class="brand-logo">
+    
+    <h2>Únete a nosotros</h2>
+    <p class="subtitle">Crea tu cuenta para empezar a comprar</p>
+
+    <!-- Alertas -->
     {% if error %}
-      <div class="alert alert-danger">{{ error }}</div>
+      <div class="alert-custom-error">
+        <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ error }}
+      </div>
     {% endif %}
 
     {% if success %}
-      <div class="alert alert-success">{{ success }}</div>
+      <div class="alert-custom-success">
+        <i class="bi bi-check-circle-fill me-1"></i> {{ success }}
+      </div>
     {% endif %}
 
-    <form method="POST" action="{{ url_for('register') }}" class="mt-3">
-
-      <div class="row-custom">
-
-        <div class="col-custom">
-          <label for="usuario">Nombre de usuario</label>
+    <form method="POST" action="{{ url_for('register') }}">
+      
+      <!-- Usamos el Grid de Bootstrap (row) para organizar -->
+      <div class="row g-3">
+        
+        <!-- Nombre de Usuario -->
+        <div class="col-12 col-md-6">
+          <label for="usuario"><i class="bi bi-person me-1"></i> Usuario</label>
           <input type="text" name="usuario" id="usuario" class="form-control"
+                 placeholder="Ej. JuanPerez"
                  required minlength="4" maxlength="12" pattern="[A-Za-z0-9]+"
-                 title="El usuario debe tener entre 4 y 12 caracteres y solo letras o números.">
+                 title="4 a 12 caracteres, solo letras y números">
         </div>
 
-        <div class="col-custom">
-          <label for="password">Contraseña</label>
+        <!-- Contraseña -->
+        <div class="col-12 col-md-6">
+          <label for="password"><i class="bi bi-lock me-1"></i> Contraseña</label>
           <input type="password" name="password" id="password" class="form-control"
-                 required minlength="8" maxlength="20"
-                 title="La contraseña debe tener mínimo 8 caracteres.">
+                 placeholder="Mínimo 8 caracteres"
+                 required minlength="8" maxlength="20">
         </div>
 
-        <div class="col-custom">
-          <label for="correo">Correo electrónico</label>
+        <!-- Correo -->
+        <div class="col-12 col-md-6">
+          <label for="correo"><i class="bi bi-envelope me-1"></i> Correo</label>
           <input type="email" name="correo" id="correo" class="form-control"
-                 required maxlength="50"
-                 title="Ingresa un correo electrónico válido.">
+                 placeholder="nombre@ejemplo.com"
+                 required maxlength="50">
         </div>
 
-        <div class="col-custom">
-          <label for="telefono">Teléfono</label>
-          <input type="text" name="telefono" id="telefono" class="form-control"
+        <!-- Teléfono -->
+        <div class="col-12 col-md-6">
+          <label for="telefono"><i class="bi bi-telephone me-1"></i> Teléfono</label>
+          <input type="tel" name="telefono" id="telefono" class="form-control"
+                 placeholder="10 dígitos"
                  required pattern="[0-9]{10}" maxlength="10"
-                 oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                 title="El teléfono debe tener exactamente 10 números.">
+                 oninput="this.value = this.value.replace(/[^0-9]/g, '')">
         </div>
 
-        <div class="col-custom" style="flex: 1 1 100%;">
-          <label for="direccion">Dirección</label>
+        <!-- Dirección (Ocupa todo el ancho col-12) -->
+        <div class="col-12">
+          <label for="direccion"><i class="bi bi-geo-alt me-1"></i> Dirección</label>
           <input type="text" name="direccion" id="direccion" class="form-control"
-                 required minlength="5" maxlength="100"
-                 title="La dirección debe tener entre 5 y 100 caracteres.">
+                 placeholder="Calle, Número, Colonia, Ciudad"
+                 required minlength="5" maxlength="100">
         </div>
 
+      </div> <!-- Fin del row -->
+
+      <div class="mt-4">
+        <button type="submit" class="btn-register">
+          Registrarme <i class="bi bi-arrow-right-short"></i>
+        </button>
       </div>
 
-      <button type="submit" class="btn btn-success w-100 mb-3">
-        <i class="bi bi-check-circle me-1"></i> Registrar
-      </button>
-
-      <a href="{{ url_for('index') }}" class="btn btn-secondary w-100">
-        <i class="bi bi-arrow-left"></i> Volver
-      </a>
+      <div>
+        <a href="{{ url_for('index') }}" class="btn-back">
+          <i class="bi bi-arrow-left"></i> Volver al inicio
+        </a>
+      </div>
+      
+      <div class="mt-3 small">
+        <span class="text-muted">¿Ya tienes cuenta?</span>
+        <a href="{{ url_for('login') }}" style="color: var(--verde); font-weight: 700; text-decoration: none;">Inicia sesión</a>
+      </div>
 
     </form>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

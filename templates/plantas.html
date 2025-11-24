@@ -2,256 +2,296 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Catálogo de Árboles - Medi</title>
+  <!-- META TAG VITAL PARA CELULARES -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Catálogo - Herboli Naz</title>
+  
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
   <style>
-/* === ESTILO MODERNO - NATURE STYLE 2025 === */
-:root {
-  --verde-claro: #a8e6cf;
-  --verde: #38b000;
-  --verde-oscuro: #1a7431;
-  --beige: #f7fff7;
-  --blanco: #ffffff;
-  --gris: #222;
-  --sombra: 0 10px 25px rgba(0,0,0,0.1);
-  --vidrio: rgba(255, 255, 255, 0.8);
-  --borde-redondo: 18px;
-}
+    /* ===== VARIABLES (MISMA PALETA) ===== */
+    :root {
+      --verde-oscuro: #2e523e;
+      --verde: #4a7856;
+      --verde-claro: #cfdec4;
+      --beige: #F9F7F2;
+      --blanco: #ffffff;
+      --texto: #2c3e33;
+      --sombra-suave: 0 10px 30px -10px rgba(74, 120, 86, 0.15);
+      --radius: 20px;
+    }
 
-body {
-  font-family: 'Outfit', sans-serif;
-  background: linear-gradient(180deg, #f0fdf4 0%, #e6f9ee 100%);
-  color: var(--gris);
-  margin: 0;
-  overflow-x: hidden;
-}
+    body {
+      font-family: 'Poppins', sans-serif;
+      /* Mismo fondo que Index y Login */
+      background: linear-gradient(135deg, rgba(46, 82, 62, 0.85) 0%, rgba(74, 120, 86, 0.5) 100%),
+                  url('{{ url_for("static", filename="images/vivero-bg.jpg") }}') center/cover no-repeat;
+      background-attachment: fixed;
+      color: var(--texto);
+      min-height: 100vh;
+      padding-top: 70px; /* Espacio para el navbar fijo */
+    }
 
-/* NAVBAR */
-.navbar {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-  box-shadow: var(--sombra);
-  padding: 12px 0;
-}
+    /* ===== NAVBAR (Igual al Index) ===== */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      padding: 10px 0;
+    }
 
-.navbar-brand {
-  color: var(--verde-oscuro) !important;
-  font-weight: 700;
-  font-size: 1.2rem;
-}
+    .navbar-brand {
+      font-weight: 800;
+      color: var(--verde-oscuro) !important;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-.navbar .btn {
-  border-radius: 12px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
+    .nav-link {
+      color: var(--texto) !important;
+      font-weight: 500;
+    }
 
-.navbar .btn-outline-light {
-  color: var(--verde-oscuro);
-  border-color: var(--verde-oscuro);
-}
+    .navbar-toggler {
+      border: none;
+      padding: 0;
+    }
 
-.navbar .btn-outline-light:hover {
-  background-color: var(--verde-oscuro);
-  color: var(--blanco);
-}
+    /* ===== HEADER PEQUEÑO ===== */
+    .page-header {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--blanco);
+      margin-bottom: 20px;
+    }
 
-/* ENCABEZADO */
-.catalog-header {
-  text-align: center;
-  padding: 80px 20px;
-  background: url("{{ url_for('static', filename='images/forest-banner.jpg') }}") center/cover no-repeat;
-  color: var(--blanco);
-  position: relative;
-}
+    .page-header h2 {
+      font-weight: 800;
+      font-size: 2.5rem;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    .page-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
 
-.catalog-header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(2px);
-}
+    /* ===== TARJETAS DE PRODUCTOS ===== */
+    .card-planta {
+      background: var(--blanco);
+      border-radius: var(--radius);
+      border: none;
+      overflow: hidden;
+      box-shadow: var(--sombra-suave);
+      transition: transform 0.3s ease;
+      height: 100%; /* Para que todas midan lo mismo */
+      display: flex;
+      flex-direction: column;
+    }
 
-.catalog-header h2,
-.catalog-header p {
-  position: relative;
-  z-index: 1;
-}
+    .card-planta:hover {
+      transform: translateY(-5px);
+    }
 
-.catalog-header h2 {
-  font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
+    .img-container {
+      height: 220px;
+      overflow: hidden;
+      position: relative;
+    }
 
-.catalog-header p {
-  font-size: 1.2rem;
-  max-width: 650px;
-  margin: 0 auto;
-}
+    .card-planta img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.5s;
+    }
 
-/* SECCIÓN CATÁLOGO */
-.catalog-section {
-  padding: 60px 20px;
-}
+    .card-planta:hover img {
+      transform: scale(1.1); /* Zoom suave al pasar mouse */
+    }
 
-.catalog-section h3 {
-  text-align: center;
-  font-weight: 700;
-  font-size: 2rem;
-  color: var(--verde-oscuro);
-  margin-bottom: 50px;
-}
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
 
-/* TARJETAS */
-.card {
-  background: var(--vidrio);
-  backdrop-filter: blur(20px);
-  border: none;
-  border-radius: var(--borde-redondo);
-  box-shadow: var(--sombra);
-  overflow: hidden;
-  transition: all 0.35s ease;
-  transform: translateY(0);
-}
+    .card-title {
+      color: var(--verde-oscuro);
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
 
-.card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-}
+    .card-desc {
+      font-size: 0.9rem;
+      color: #666;
+      flex-grow: 1; /* Empuja el precio y botón hacia abajo */
+      margin-bottom: 15px;
+    }
 
-.card-img-top {
-  height: 200px;
-  object-fit: cover;
-}
+    .price-tag {
+      font-size: 1.3rem;
+      color: var(--verde);
+      font-weight: 800;
+      display: block;
+      margin-bottom: 15px;
+    }
 
-.card-body {
-  padding: 20px;
-}
+    /* Input de cantidad bonito */
+    .form-control-qty {
+      border: 2px solid var(--verde-claro);
+      border-radius: 10px;
+      text-align: center;
+      width: 60px;
+      padding: 5px;
+      font-weight: 600;
+      color: var(--verde-oscuro);
+    }
 
-.card-title {
-  color: var(--verde-oscuro);
-  font-weight: 700;
-  font-size: 1.1rem;
-}
+    .btn-add {
+      background: var(--verde-oscuro);
+      color: var(--blanco);
+      border: none;
+      border-radius: 50px;
+      padding: 10px 20px;
+      font-weight: 600;
+      flex-grow: 1;
+      transition: 0.3s;
+    }
 
-.card-text {
-  font-size: 0.95rem;
-  color: #333;
-  margin-bottom: 10px;
-}
+    .btn-add:hover {
+      background: var(--verde);
+      color: var(--blanco);
+    }
 
-.price-tag {
-  color: var(--verde);
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-bottom: 12px;
-}
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--verde-oscuro);
+      color: rgba(255,255,255,0.8);
+      padding: 30px 0;
+      border-top-left-radius: 40px;
+      border-top-right-radius: 40px;
+      text-align: center;
+      margin-top: 40px;
+    }
 
-/* BOTÓN */
-.btn-success {
-  background: linear-gradient(90deg, var(--verde), var(--verde-oscuro));
-  border: none;
-  color: var(--blanco);
-  font-weight: 600;
-  border-radius: 12px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.btn-success:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(56,176,0,0.3);
-}
-
-/* FOOTER */
-footer {
-  background: var(--verde-oscuro);
-  color: var(--blanco);
-  text-align: center;
-  padding: 25px 10px;
-  font-size: 15px;
-  letter-spacing: 0.4px;
-  margin-top: 60px;
-}
-
-footer span {
-  color: var(--verde-claro);
-}
-
-/* ANIMACIONES */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.card {
-  animation: fadeInUp 0.7s ease both;
-}
-
-/* RESPONSIVO */
-@media (max-width: 768px) {
-  .catalog-header h2 { font-size: 2.3rem; }
-  .card-img-top { height: 180px; }
-}
+    /* ===== MÓVIL OPTIMIZACIÓN ===== */
+    @media (max-width: 768px) {
+      body {
+        background-attachment: scroll; /* Fix iPhone */
+      }
+      .navbar-collapse {
+        background: #fff;
+        padding: 20px;
+        border-radius: 20px;
+        margin-top: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      }
+      .page-header h2 {
+        font-size: 2rem;
+      }
+      .img-container {
+        height: 200px; /* Un poco menos alto en móvil */
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- NAVBAR FIXED -->
   <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="{{ url_for('index') }}"> Inicio</a>
-      <div class="d-flex align-items-center">
-        {% if session.get('usuario') %}
-          <span class="me-3 fw-semibold text-success">👋 {{ session['usuario'] }}</span>
-          <a href="{{ url_for('ver_carrito') }}" class="btn btn-outline-light btn-sm me-2">
-            🛒 Ver carrito
-          </a>
-          <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Cerrar Sesion</a>
-        {% else %}
-          <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm">Iniciar sesión</a>
-        {% endif %}
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <!-- Si tienes la imagen del logo, ponla aquí, si no texto -->
+        <i class="bi bi-flower1"></i> Herboli Naz
+      </a>
+
+      <!-- Botón Hamburguesa Corregido -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="bi bi-list" style="font-size: 2.2rem; color: var(--verde-oscuro);"></i>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center text-center">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link fw-bold" href="{{ url_for('plantas') }}">Catálogo</a></li>
+          
+          {% if session.get('usuario') %}
+            <li class="nav-item mt-3 mt-lg-0 ms-lg-3">
+              <a href="{{ url_for('ver_carrito') }}" class="btn btn-outline-success rounded-pill px-4 w-100">
+                <i class="bi bi-cart-fill"></i> Carrito
+              </a>
+            </li>
+            <li class="nav-item mt-2 mt-lg-0 ms-lg-2">
+              <a href="{{ url_for('logout') }}" class="nav-link text-danger">Salir</a>
+            </li>
+          {% else %}
+            <li class="nav-item mt-2 mt-lg-0 ms-lg-3">
+              <a href="{{ url_for('login') }}" class="btn btn-outline-success rounded-pill px-4 w-100">Ingresar</a>
+            </li>
+          {% endif %}
+        </ul>
       </div>
     </div>
   </nav>
 
-  <!-- Encabezado -->
-  <div class="catalog-header">
-    <h2>Catálogo de Árboles y plantas 🌳</h2>
-    <p>Explora especies con propósito: ecológicas, ornamentales y medicinales. Cada árbol, una historia de vida.</p>
+  <!-- ENCABEZADO DE PÁGINA -->
+  <div class="page-header">
+    <h2>Nuestro Catálogo</h2>
+    <p>Elige vida para tu hogar. Calidad garantizada.</p>
   </div>
 
-  <!-- Catálogo -->
-  <div class="container catalog-section">
-    <h3>🌱 Descubre Nuestras Especies</h3>
-    <div class="row">
+  <!-- GRILLA DE PRODUCTOS -->
+  <div class="container pb-5">
+    <div class="row g-4">
+      
       {% for planta in plantas %}
-      <div class="col-md-3 mb-4">
-        <div class="card h-100">
-          <img src="{{ url_for('static', filename='images/' ~ planta.imagen) }}" class="card-img-top" alt="{{ planta.nombre }}">
+      <div class="col-12 col-md-6 col-lg-3"> <!-- 1 columna en cel, 2 en tablet, 4 en PC -->
+        <div class="card-planta">
+          <div class="img-container">
+            <img src="{{ url_for('static', filename='images/' ~ planta.imagen) }}" alt="{{ planta.nombre }}">
+          </div>
+          
           <div class="card-body">
             <h5 class="card-title">{{ planta.nombre }}</h5>
-            <p class="card-text">{{ planta.descripcion }}</p>
-            <div class="price-tag">${{ planta.precio }}</div>
-            <form action="{{ url_for('agregar_al_carrito') }}" method="post">
+            <p class="card-desc">{{ planta.descripcion }}</p>
+            
+            <span class="price-tag">${{ planta.precio }}</span>
+
+            <form action="{{ url_for('agregar_al_carrito') }}" method="post" class="d-flex gap-2">
               <input type="hidden" name="planta_id" value="{{ planta.id }}">
-              <input type="number" name="cantidad" value="1" min="1" class="form-control mb-2" style="width: 80px;">
-              <button type="submit" class="btn btn-success btn-sm w-100">Agregar al carrito</button>
+              
+              <!-- Input Cantidad -->
+              <input type="number" name="cantidad" value="1" min="1" class="form-control-qty">
+              
+              <!-- Botón Agregar -->
+              <button type="submit" class="btn-add">
+                Agregar <i class="bi bi-bag-plus"></i>
+              </button>
             </form>
           </div>
         </div>
       </div>
       {% endfor %}
+
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- FOOTER -->
   <footer>
-    🌲 <span>Herbolia Naz</span> — Creciendo vida, cultivando futuro 🌎
+    <div class="container">
+      <h5 class="fw-bold mb-0">Herboli Naz</h5>
+      <p class="small opacity-50 mb-0">© 2025 Todos los derechos reservados.</p>
+    </div>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
