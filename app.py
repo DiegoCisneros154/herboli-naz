@@ -731,14 +731,13 @@ def debug_tablas():
     except Exception as e:
         return jsonify({"Error": str(e)})
 
-@app.route('/crear_tablas_magicas')
-def crear_tablas():
+@app.route('/crear_tablas_urgente')
+def crear_tablas_urgente():
     try:
         conexion = obtener_conexion()
         cursor = conexion.cursor()
         
-        # Lista de comandos SQL para crear tu estructura exacta
-        comandos_sql = [
+        comandos = [
             """CREATE TABLE IF NOT EXISTS usuarios (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 usuario VARCHAR(100) NOT NULL,
@@ -803,26 +802,23 @@ def crear_tablas():
                 calificacion INT DEFAULT 5,
                 notas TEXT
             )""",
-            # Insertamos un admin y plantas de prueba si no existen
-            """INSERT IGNORE INTO usuarios (id, usuario, password, correo, rol) 
-               VALUES (1, 'admin', '123', 'admin@tienda.com', 'admin')""",
-            """INSERT IGNORE INTO plantas (nombre, descripcion, precio, imagen) 
-               VALUES ('Planta Prueba', 'Creada automaticamente', 100.00, 'default.jpg')"""
+            # Admin de emergencia
+            "INSERT IGNORE INTO usuarios (id, usuario, password, correo, rol) VALUES (1, 'admin', '123', 'admin@test.com', 'admin')",
+            # Planta de emergencia
+            "INSERT IGNORE INTO plantas (nombre, descripcion, precio, imagen) VALUES ('Planta Test', 'Prueba', 100, 'img.jpg')"
         ]
 
-        resultados = []
-        for sql in comandos_sql:
+        for sql in comandos:
             cursor.execute(sql)
-            resultados.append("Ejecutado correctamente")
         
         conexion.commit()
         cursor.close()
         conexion.close()
-        
-        return jsonify({"Estado": "¡Tablas creadas con éxito!", "Detalle": resultados})
+        return "<h1>¡EXITO! TABLAS CREADAS. AHORA YA PUEDES USAR LA APP.</h1>"
         
     except Exception as e:
-        return jsonify({"Error Fatal": str(e)})
+        return f"<h1>ERROR AL CREAR TABLAS: {str(e)}</h1>"
+# --- FIN DEL BOTÓN MÁGICO ---
 
 # Ejecutar servidor
 if __name__ == '__main__':
