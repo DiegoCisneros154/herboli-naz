@@ -707,6 +707,31 @@ def eliminar_planta():
     return jsonify({'mensaje': 'Planta eliminada correctamente'})
 
 
+@app.route('/debug/tablas')
+def debug_tablas():
+    try:
+        conexion = obtener_conexion()
+        cursor = conexion.cursor()
+        
+        # 1. Ver en qué base de datos estamos conectados
+        cursor.execute("SELECT DATABASE()")
+        db_actual = cursor.fetchone()
+        
+        # 2. Ver qué tablas existen realmente ahí
+        cursor.execute("SHOW TABLES")
+        tablas = cursor.fetchall()
+        
+        cursor.close()
+        conexion.close()
+        
+        return jsonify({
+            "Base de datos conectada": db_actual,
+            "Tablas visibles": tablas
+        })
+    except Exception as e:
+        return jsonify({"Error": str(e)})
+
+
 
 # Ejecutar servidor
 if __name__ == '__main__':
