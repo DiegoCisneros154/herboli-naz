@@ -6,6 +6,18 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.secret_key = 'clave_super_secreta'
 
+
+# --- CONFIGURACIÓN DE IMÁGENES (CORREGIDA PARA RENDER) ---
+# Obtenemos la ruta absoluta de la carpeta donde está tu código
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Definimos que las fotos van en static/images
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'images')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# Creamos la carpeta si no existe
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# ... (Aquí sigue tu DB_CONFIG igual que antes) ...
+
 # --- CONFIGURACIÓN PARA SUBIR IMÁGENES ---
 # Definimos la carpeta donde se guardarán las fotos
 UPLOAD_FOLDER = 'static/images'
@@ -403,39 +415,82 @@ def checkout():
 def procesar_checkout():
     if 'usuario' not in session:
         return redirect(url_for('login'))
+
+    # 1. Recibir dirección del formulario
+    direccion_envio = request.form.get('direccion')
+    
     conexion = obtener_conexion()
     cursor = conexion.cursor(dictionary=True)
-    cursor.execute('SELECT id FROM usuarios WHERE usuario = %s', (session['usuario'],))
-    usuario = cursor.fetchone()
-    cliente_id = usuario['id']
-    cursor.execute('''
-        SELECT c.planta_id, p.nombre, p.precio AS precio, c.cantidad
-        FROM carrito c
-        JOIN plantas p ON c.planta_id = p.id
-        WHERE c.cliente_id = %s
-    ''', (cliente_id,))
-    carrito = cursor.fetchall()
-    if not carrito:
-        return redirect(url_for('plantas'))
-    total_pedido = sum(item['precio'] * item['cantidad'] for item in carrito)
+
     try:
+        # 2. Datos del cliente
+        cursor.execute('SELECT id FROM usuarios WHERE usuario = %s', (session['usuario'],))
+        usuario = cursor.fetchone()
+        cliente_id = usuario['id']
+
+        # 3. Actualizar dirección si cambió
+        if direccion_envio:
+            cursor.execute('UPDATE usuarios SET direccion = %s WHERE id = %s', (direccion_envio, cliente_id))
+            conexion.commit()
+
+        # 4. Obtener productos del carrito
+        cursor.execute('''
+            SELECT c.planta_id, p.nombre, p.precio, c.cantidad
+            FROM carrito c
+            JOIN plantas p ON c.planta_id = p.id
+            WHERE c.cliente_id = %s
+        ''', (cliente_id,))
+        carrito = cursor.fetchall()
+
+        if not carrito:
+            return redirect(url_for('plantas'))
+
+        # 5. PREPARAR DATOS PARA TU HTML (Aquí estaba el error antes)
+        total_pedido = 0
+        productos_confirmados = []
+
+        for item in carrito:
+            # Calculamos el total por producto (precio x cantidad)
+            subtotal = item['precio'] * item['cantidad']
+            total_pedido += subtotal
+            
+            # Creamos el objeto exacto que tu HTML espera
+            productos_confirmados.append({
+                'nombre': item['nombre'],
+                'precio': item['precio'],
+                'cantidad': item['cantidad'],
+                'total': subtotal  # <--- ESTO ES LO QUE FALTABA
+            })
+
+        # 6. Guardar en Base de Datos (Pedidos)
         cursor.execute('INSERT INTO pedidos (cliente_id, fecha, total) VALUES (%s, NOW(), %s)', (cliente_id, total_pedido))
         pedido_id = cursor.lastrowid
+
+        # 7. Guardar Detalles
         for item in carrito:
             cursor.execute('''
                 INSERT INTO detalle_pedidos (pedido_id, planta_id, cantidad, precio_unitario)
                 VALUES (%s, %s, %s, %s)
             ''', (pedido_id, item['planta_id'], item['cantidad'], item['precio']))
+
+        # 8. Vaciar carrito
         cursor.execute('DELETE FROM carrito WHERE cliente_id = %s', (cliente_id,))
         conexion.commit()
+
+        # 9. Enviar a tu HTML (Ahora sí lleva los datos correctos)
+        return render_template('confirmacion.html', 
+                             pedido={'id': pedido_id}, 
+                             productos=productos_confirmados, 
+                             total=total_pedido)
+
     except Exception as e:
         conexion.rollback()
-        print("Error en checkout:", e)
-        return "Error en la compra"
-    cursor.close()
-    conexion.close()
-    return render_template('confirmacion.html', pedido={'id': pedido_id}, productos=carrito, total=total_pedido)
-
+        print("❌ ERROR EN CHECKOUT:", e)
+        return f"Error en el servidor: {e}"
+        
+    finally:
+        cursor.close()
+        conexion.close()
 @app.route('/compras')
 def compras_realizadas():
     if 'usuario' not in session:
