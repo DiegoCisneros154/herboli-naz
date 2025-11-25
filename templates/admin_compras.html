@@ -1,78 +1,299 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Compras de Clientes</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <style>
-        body { background-color: #f2f2f2; padding: 20px; }
-        .cliente-card { background-color: white; padding: 20px; margin-bottom: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .cliente-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .cliente-header h4 { margin: 0; }
-        .table th { background-color: #28a745; color: white; }
-        .subtotal { font-weight: bold; text-align: right; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admin - Compras de Clientes</title>
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <style>
+    /* ===== VARIABLES (ESTILO HERBOLI NAZ) ===== */
+    :root {
+      --verde-oscuro: #2e523e;
+      --verde: #4a7856;
+      --verde-claro: #cfdec4;
+      --beige: #F9F7F2;
+      --blanco: #ffffff;
+      --texto: #2c3e33;
+      --sombra-suave: 0 10px 30px -10px rgba(74, 120, 86, 0.15);
+      --radius: 20px;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--beige);
+      color: var(--texto);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-top: 80px;
+    }
+
+    /* ===== NAVBAR ADMIN ===== */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      border-bottom: 2px solid var(--verde-claro);
+    }
+    .navbar-brand { color: var(--verde-oscuro) !important; font-weight: 800; font-size: 1.3rem; }
+    .nav-link { color: var(--texto) !important; font-weight: 500; }
+
+    /* ===== CONTENEDOR ===== */
+    .container {
+      max-width: 1100px;
+      margin-bottom: 40px;
+    }
+
+    .page-title {
+      color: var(--verde-oscuro);
+      font-weight: 800;
+      margin-bottom: 20px;
+      padding-left: 10px;
+      border-left: 5px solid var(--verde);
+    }
+
+    .btn-back {
+      background-color: var(--verde-oscuro);
+      color: white;
+      border-radius: 50px;
+      padding: 8px 25px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.3s;
+      margin-bottom: 30px;
+    }
+    .btn-back:hover { background-color: var(--verde); color: white; transform: translateX(-5px); }
+
+    /* ===== TARJETAS DE CLIENTE ===== */
+    .cliente-card {
+      background: var(--blanco);
+      border-radius: var(--radius);
+      box-shadow: var(--sombra-suave);
+      padding: 0; /* Padding controlado dentro */
+      margin-bottom: 30px;
+      overflow: hidden;
+      border: none;
+    }
+
+    .cliente-header {
+      background: var(--verde-claro);
+      padding: 15px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .cliente-header h4 {
+      margin: 0;
+      font-weight: 700;
+      color: var(--verde-oscuro);
+      font-size: 1.1rem;
+    }
+    
+    .cliente-phone {
+      background: var(--blanco);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--verde);
+    }
+
+    /* ===== TABLA ===== */
+    .table-container { padding: 20px; }
+    
+    .table thead {
+      background-color: var(--verde-oscuro);
+      color: white;
+    }
+    .table th {
+      font-weight: 500;
+      border: none;
+      padding: 12px;
+    }
+    .table td {
+      vertical-align: middle;
+      padding: 12px;
+      border-bottom: 1px dashed #eee;
+    }
+
+    /* Subtotal Row */
+    .row-subtotal {
+      background-color: #fcfdfc;
+      font-weight: bold;
+      color: var(--verde-oscuro);
+      border-top: 2px solid var(--verde);
+    }
+
+    /* ===== RESPONSIVE TABLE (MÓVIL) ===== */
+    @media (max-width: 768px) {
+      .table thead { display: none; }
+      
+      .table tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 10px;
+      }
+      
+      .table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 5px;
+        border: none;
+        border-bottom: 1px solid #f5f5f5;
+        text-align: right;
+      }
+      
+      .table td:last-child { border-bottom: none; }
+
+      .table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--verde);
+        text-align: left;
+        margin-right: 10px;
+      }
+
+      /* Ajuste especial para el subtotal en móvil */
+      .row-subtotal td {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        background: var(--verde-claro);
+        color: var(--verde-oscuro);
+        border-radius: 10px;
+      }
+      .subtotal-label { display: inline-block; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="mb-4 text-center">Compras de Clientes</h1>
-        <a href="{{ url_for('configuracion') }}" class="btn btn-secondary mb-4">⬅ Volver al Panel de Configuración</a>
 
-        {% set current_cliente = None %}
-        {% set subtotal = 0 %}
-        {% for compra in compras %}
-            {% if current_cliente != compra.cliente_id %}
-                {% if current_cliente is not none %}
-                        <tr>
-                            <td colspan="4" class="subtotal">Subtotal del Cliente:</td>
-                            <td class="fw-bold">{{ subtotal }}</td>
-                        </tr>
-                    </tbody>
-                    </table>
-                </div>
-                {% set subtotal = 0 %}
-                {% endif %}
-
-                <div class="cliente-card">
-                    <div class="cliente-header">
-                        <h4>{{ compra.cliente_nombre }} (ID: {{ compra.cliente_id }})</h4>
-                        <span>Tel: {{ compra.cliente_telefono }}</span>
-                    </div>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Pedido ID</th>
-                                <th>Tipo de Árbol</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Total</th>
-                                <th>Fecha</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                {% set current_cliente = compra.cliente_id %}
-            {% endif %}
-
-            <tr>
-                <td>{{ compra.pedido_id }}</td>
-                <td>{{ compra.tipo_arbol }}</td>
-                <td>{{ compra.cantidad }}</td>
-                <td>{{ compra.precio }}</td>
-                <td>{{ compra.total }}</td>
-                <td>{{ compra.fecha }}</td>
-            </tr>
-            {% set subtotal = subtotal + compra.total %}
-        {% endfor %}
-
-        {% if current_cliente is not none %}
-            <tr>
-                <td colspan="4" class="subtotal">Subtotal del Cliente:</td>
-                <td class="fw-bold">{{ subtotal }}</td>
-            </tr>
-            </tbody>
-            </table>
-        </div>
-        {% endif %}
+  <!-- NAVBAR ADMIN -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand" href="#">
+        <i class="bi bi-shield-lock-fill"></i> Admin Panel
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="bi bi-list" style="font-size: 2rem; color: var(--verde-oscuro);"></i>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('configuracion') }}">Configuración</a></li>
+          <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}">Salir</a></li>
+        </ul>
+      </div>
     </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h2 class="page-title">Reporte de Ventas por Cliente</h2>
+    
+    <a href="{{ url_for('configuracion') }}" class="btn-back">
+      <i class="bi bi-arrow-left-circle"></i> Volver al Panel
+    </a>
+
+    <!-- LÓGICA JINJA ORIGINAL (MANTENIDA PERO CON NUEVO HTML) -->
+    {% set current_cliente = None %}
+    {% set subtotal = 0 %}
+    
+    {% for compra in compras %}
+      
+      {% if current_cliente != compra.cliente_id %}
+        
+        <!-- SI NO ES EL PRIMERO, CERRAMOS LA TARJETA ANTERIOR -->
+        {% if current_cliente is not none %}
+                  <!-- Fila de Subtotal del cliente anterior -->
+                  <tr class="row-subtotal">
+                    <td colspan="4" class="text-end subtotal-label">Subtotal del Cliente:</td>
+                    <!-- En móvil, el colspan se rompe, así que usamos CSS para arreglarlo -->
+                    <td data-label="Subtotal Final" class="fs-5 text-end text-lg-start">${{ "{:,.2f}".format(subtotal) }}</td>
+                    <td class="d-none d-lg-table-cell"></td> <!-- Celda vacía para fecha en desktop -->
+                  </tr>
+                </tbody>
+              </table>
+            </div> <!-- Cierra table-responsive -->
+          </div> <!-- Cierra table-container -->
+        </div> <!-- Cierra cliente-card -->
+        
+        {% set subtotal = 0 %}
+        {% endif %}
+
+        <!-- ABRIMOS NUEVA TARJETA DE CLIENTE -->
+        <div class="cliente-card">
+          <div class="cliente-header">
+            <div>
+              <i class="bi bi-person-circle fs-4 me-2"></i>
+              <h4>{{ compra.cliente_nombre }}</h4>
+              <small class="text-muted">ID: {{ compra.cliente_id }}</small>
+            </div>
+            <span class="cliente-phone"><i class="bi bi-telephone-fill"></i> {{ compra.cliente_telefono }}</span>
+          </div>
+
+          <div class="table-container">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Pedido #</th>
+                    <th>Producto</th>
+                    <th>Cant.</th>
+                    <th>Precio Unit.</th>
+                    <th>Total</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody>
+        {% set current_cliente = compra.cliente_id %}
+      {% endif %}
+
+      <!-- FILA DE PRODUCTO -->
+      <tr>
+        <td data-label="Pedido ID" class="fw-bold text-muted">#{{ compra.pedido_id }}</td>
+        <td data-label="Producto" class="fw-bold text-success">{{ compra.tipo_arbol }}</td>
+        <td data-label="Cantidad">{{ compra.cantidad }}</td>
+        <td data-label="Precio Unit.">${{ "{:,.2f}".format(compra.precio) }}</td>
+        <td data-label="Total">${{ "{:,.2f}".format(compra.total) }}</td>
+        <td data-label="Fecha" class="small text-muted">{{ compra.fecha }}</td>
+      </tr>
+
+      {% set subtotal = subtotal + compra.total %}
+    {% endfor %}
+
+    <!-- CERRAMOS LA ÚLTIMA TARJETA (SI HUBO DATOS) -->
+    {% if current_cliente is not none %}
+          <tr class="row-subtotal">
+            <td colspan="4" class="text-end subtotal-label">Subtotal del Cliente:</td>
+            <td data-label="Subtotal Final" class="fs-5 text-end text-lg-start">${{ "{:,.2f}".format(subtotal) }}</td>
+            <td class="d-none d-lg-table-cell"></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+     </div>
+    </div>
+    {% else %}
+      <!-- SI NO HAY VENTAS -->
+      <div class="alert alert-info text-center p-5 rounded-4 shadow-sm">
+        <i class="bi bi-inbox fs-1"></i>
+        <h4 class="mt-3">No hay registros de ventas.</h4>
+      </div>
+    {% endif %}
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
