@@ -2,244 +2,340 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mis Compras</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mis Pedidos - Herboli Naz</title>
+  
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
   <style>
+    /* ===== VARIABLES ===== */
+    :root {
+      --verde-oscuro: #2e523e;
+      --verde: #4a7856;
+      --verde-claro: #cfdec4;
+      --beige: #F9F7F2;
+      --blanco: #ffffff;
+      --texto: #2c3e33;
+      --sombra-suave: 0 10px 30px -10px rgba(74, 120, 86, 0.15);
+      --radius: 20px;
+    }
+
     body {
-      font-family: 'Nunito', sans-serif;
-      background-color: #f5f6f3;
-      margin: 0;
-      padding: 0;
-      color: #444;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--beige);
+      color: var(--texto);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-top: 80px;
     }
 
-    .container {
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    .navbar-brand { color: var(--verde-oscuro) !important; font-weight: 800; font-size: 1.3rem; }
+    .nav-link { color: var(--texto) !important; font-weight: 500; }
+
+    /* ===== CONTENEDOR PRINCIPAL ===== */
+    .orders-container {
       max-width: 950px;
-      margin: 50px auto;
+      margin: 30px auto;
+      padding: 0 15px;
     }
 
-    .main-card {
-      background-color: #ffffff;
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      border: 1px solid #e8e8e8;
-    }
-
-    h2 {
+    .section-title {
+      color: var(--verde-oscuro);
       font-weight: 800;
-      color: #2f4f4f;
-      text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--verde-claro);
+    }
+
+    /* ===== ACORDEÓN DE PEDIDOS ===== */
+    .accordion-item {
+      border: none;
+      border-radius: var(--radius) !important;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      overflow: hidden;
+      background: var(--blanco);
     }
 
     .accordion-button {
-      background: none;
+      background-color: var(--blanco);
+      color: var(--texto);
+      font-weight: 600;
+      padding: 20px;
       border: none;
-      box-shadow: none;
-      color: #333;
-      font-weight: 700;
-      font-size: 1.05rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 18px 20px;
-      transition: all 0.3s ease;
+      box-shadow: none !important; /* Quitar borde azul al hacer clic */
+    }
+
+    .accordion-button:not(.collapsed) {
+      background-color: rgba(74, 120, 86, 0.1); /* Fondo verde muy suave al abrir */
+      color: var(--verde-oscuro);
     }
 
     .accordion-button::after {
-      background-image: none;
-      font-family: "Font Awesome 6 Free";
-      content: "\f107";
-      font-weight: 900;
-      color: #666;
-      transition: transform 0.3s ease;
-    }
-
-    .accordion-button:not(.collapsed)::after {
-      transform: rotate(-180deg);
-    }
-
-    .accordion-item {
-      border: 1px solid #ddd;
-      border-radius: 15px;
-      margin-bottom: 15px;
-      overflow: hidden;
-      background-color: #fafafa;
-      transition: all 0.3s ease;
-    }
-
-    .accordion-item:hover {
-      box-shadow: 0 6px 15px rgba(0,0,0,0.07);
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%232e523e'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
     }
 
     .accordion-body {
-      background-color: #fff;
+      background-color: #fafafa;
       padding: 20px;
-      border-top: 1px solid #eee;
+      border-top: 1px solid rgba(0,0,0,0.05);
     }
 
-    .pedido-info {
+    /* INFO DEL HEADER DEL ACORDEÓN */
+    .order-header-info {
+      width: 100%;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-right: 15px;
       flex-wrap: wrap;
-      gap: 15px;
-      font-size: 0.95rem;
+      gap: 10px;
+    }
+
+    .badge-date {
+      background: var(--verde-claro);
+      color: var(--verde-oscuro);
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* ===== TABLA INTERNA ===== */
+    .table-custom th {
+      color: var(--verde);
+      font-weight: 600;
+      border-bottom: 2px solid var(--verde-claro);
+    }
+    .table-custom td {
+      vertical-align: middle;
       color: #555;
     }
 
-    .pedido-info strong {
-      color: #2f4f4f;
-    }
-
-    .table {
-      margin-top: 10px;
-    }
-
-    .table thead {
-      background-color: #4caf50;
-      color: white;
-    }
-
-    .table td, .table th {
-      vertical-align: middle;
-    }
-
-    .table tbody tr:hover {
-      background-color: #f2f7f3;
-      transition: 0.2s;
-    }
-
-    .btn {
-      border-radius: 40px;
-      padding: 10px 25px;
-      font-weight: 600;
-      border: none;
-      transition: 0.3s;
-    }
-
-    .btn-ver-productos {
-      background-color: #4caf50;
-      color: white;
-    }
-
-    .btn-ver-productos:hover {
-      background-color: #3e8e41;
-      transform: scale(1.05);
-    }
-
-    .btn-regresar {
-      background-color: #2f4f4f;
-      color: white;
-      margin-top: 25px;
-    }
-
-    .btn-regresar:hover {
-      background-color: #1d3636;
-      transform: scale(1.05);
-    }
-
-    .no-compras {
+    /* ===== ESTADO VACÍO ===== */
+    .empty-state {
       text-align: center;
-      color: #888;
-      font-size: 1.1rem;
+      padding: 50px 20px;
+      background: var(--blanco);
+      border-radius: var(--radius);
+      box-shadow: var(--sombra-suave);
+    }
+    .empty-state i {
+      font-size: 4rem;
+      color: var(--verde-claro);
+      margin-bottom: 20px;
     }
 
-    .no-compras i {
-      color: #ccc;
-      font-size: 2.5rem;
-      margin-bottom: 15px;
+    /* ===== BOTONES ===== */
+    .btn-shop {
+      background-color: var(--verde);
+      color: white;
+      border-radius: 50px;
+      padding: 10px 30px;
+      text-decoration: none;
+      transition: 0.3s;
+      border: none;
+      display: inline-block;
+    }
+    .btn-shop:hover { background-color: var(--verde-oscuro); color: white; transform: translateY(-2px); }
+
+    .btn-home {
+      border: 2px solid var(--verde);
+      color: var(--verde);
+      border-radius: 50px;
+      padding: 8px 25px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.3s;
+      display: inline-block;
+      margin-top: 30px;
+    }
+    .btn-home:hover { background: var(--verde); color: white; }
+
+    /* ===== RESPONSIVE (MÓVIL) ===== */
+    @media (max-width: 768px) {
+      .order-header-info {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      /* Convertir tabla en tarjetas para móvil */
+      .table-custom thead { display: none; }
+      .table-custom tbody tr {
+        display: block;
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        padding: 10px;
+      }
+      .table-custom td {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        border: none;
+        font-size: 0.95rem;
+      }
+      .table-custom td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--verde);
+      }
     }
 
-    .fade-in {
-      animation: fadeIn 0.6s ease forwards;
-      opacity: 0;
+    footer {
+      background: var(--verde-oscuro);
+      color: rgba(255,255,255,0.8);
+      padding: 30px 0;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      margin-top: auto;
+      text-align: center;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
   </style>
 </head>
 <body>
-  <div class="container fade-in">
-    <div class="main-card">
-      <h2><i class="fas fa-shopping-bag me-2 text-success"></i> Mis Compras</h2>
 
-      {% if compras %}
-        <div class="accordion" id="accordionCompras">
-          {% for c in compras %}
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="heading{{ c.pedido.id }}">
-                <button class="accordion-button collapsed" type="button" 
-                        data-bs-toggle="collapse" 
-                        data-bs-target="#collapse{{ c.pedido.id }}" 
-                        aria-expanded="false" 
-                        aria-controls="collapse{{ c.pedido.id }}">
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='images/logonaz1.jpg') }}" alt="Logo" style="height:40px; border-radius:8px; margin-right:10px;">
+        Herboli Naz
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="bi bi-list" style="font-size: 2rem; color: var(--verde-oscuro);"></i>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center text-center">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('plantas') }}">Catálogo</a></li>
+          {% if 'usuario' in session %}
+            <li class="nav-item ms-lg-3">
+               <span class="nav-link fw-bold text-success">Hola, {{ session['usuario'] }}</span>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="container orders-container">
+    <h3 class="section-title"><i class="bi bi-bag-check-fill"></i> Historial de Pedidos</h3>
+
+    {% if compras %}
+      <div class="accordion" id="accordionCompras">
+        {% for c in compras %}
+          <div class="accordion-item fade-in">
+            <h2 class="accordion-header" id="heading{{ c.pedido.id }}">
+              <button class="accordion-button collapsed" type="button" 
+                      data-bs-toggle="collapse" 
+                      data-bs-target="#collapse{{ c.pedido.id }}">
+                
+                <div class="order-header-info">
                   <div>
-                    <i class="fas fa-receipt text-success me-2"></i>
-                    Pedido #{{ c.pedido.id }}
+                    <span class="fw-bold text-success"><i class="bi bi-receipt"></i> Pedido #{{ c.pedido.id }}</span>
                   </div>
-                  <div class="pedido-info">
+                  
+                  <div class="d-flex gap-3 align-items-center">
                     {% if c.pedido.fecha %}
-                      <span><strong>Fecha:</strong> {{ c.pedido.fecha.strftime('%d/%m/%Y %H:%M') }}</span>
+                      <span class="badge-date"><i class="bi bi-calendar3"></i> {{ c.pedido.fecha.strftime('%d/%m/%Y') }}</span>
                     {% else %}
-                      <span><strong>Fecha:</strong> No disponible</span>
+                      <span class="badge-date">Fecha N/D</span>
                     {% endif %}
-                    <span><strong>Total:</strong> ${{ "{:,.2f}".format(c.pedido.total) }}</span>
+                    <span class="fw-bold text-dark fs-5">${{ "{:,.2f}".format(c.pedido.total) }}</span>
                   </div>
-                </button>
-              </h2>
-              <div id="collapse{{ c.pedido.id }}" 
-                   class="accordion-collapse collapse" 
-                   aria-labelledby="heading{{ c.pedido.id }}" 
-                   data-bs-parent="#accordionCompras">
-                <div class="accordion-body">
-                  <table class="table table-hover text-center">
+                </div>
+
+              </button>
+            </h2>
+            
+            <div id="collapse{{ c.pedido.id }}" 
+                 class="accordion-collapse collapse" 
+                 data-bs-parent="#accordionCompras">
+              <div class="accordion-body">
+                
+                <h6 class="text-muted mb-3 small text-uppercase fw-bold">Detalle de productos</h6>
+                <div class="table-responsive-sm">
+                  <table class="table table-custom mb-0">
                     <thead>
                       <tr>
                         <th>Producto</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                        <th>Total</th>
+                        <th class="text-center">Precio</th>
+                        <th class="text-center">Cant.</th>
+                        <th class="text-end">Total</th>
                       </tr>
                     </thead>
                     <tbody>
                       {% for p in c.productos %}
                         <tr>
-                          <td><i class="fas fa-leaf text-success me-2"></i>{{ p.nombre }}</td>
-                          <td>${{ "{:,.2f}".format(p.precio) }}</td>
-                          <td>{{ p.cantidad }}</td>
-                          <td><strong>${{ "{:,.2f}".format(p.total) }}</strong></td>
+                          <td data-label="Producto">
+                            <span class="fw-bold">{{ p.nombre }}</span>
+                          </td>
+                          <td data-label="Precio" class="text-md-center">
+                            ${{ "{:,.2f}".format(p.precio) }}
+                          </td>
+                          <td data-label="Cantidad" class="text-md-center">
+                            {{ p.cantidad }}
+                          </td>
+                          <td data-label="Total" class="text-end fw-bold text-success">
+                            ${{ "{:,.2f}".format(p.total) }}
+                          </td>
                         </tr>
                       {% endfor %}
                     </tbody>
                   </table>
                 </div>
+
               </div>
             </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <div class="no-compras mt-4">
-          <i class="fas fa-box-open"></i>
-          <p>No has realizado ninguna compra todavía.</p>
-          <a href="{{ url_for('plantas') }}" class="btn btn-ver-productos mt-3">
-            <i class="fas fa-seedling"></i> Ver Productos
-          </a>
-        </div>
-      {% endif %}
-
-      <div class="text-center">
-        <a href="{{ url_for('index') }}" class="btn btn-regresar">
-          <i class="fas fa-home"></i> Regresar al Inicio
+          </div>
+        {% endfor %}
+      </div>
+    
+    {% else %}
+      <!-- ESTADO VACÍO -->
+      <div class="empty-state">
+        <i class="bi bi-bag-x"></i>
+        <h4>Aún no tienes pedidos</h4>
+        <p class="text-muted mb-4">Parece que todavía no has realizado ninguna compra con nosotros.</p>
+        <a href="{{ url_for('plantas') }}" class="btn-shop">
+          <i class="bi bi-cart-plus"></i> Ir al Catálogo
         </a>
       </div>
+    {% endif %}
+
+    <div class="text-center mt-2">
+      <a href="{{ url_for('index') }}" class="btn-home">
+        <i class="bi bi-arrow-left"></i> Volver al Inicio
+      </a>
     </div>
+
   </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <h5 class="fw-bold mb-3">Herboli Naz</h5>
+      <p class="small opacity-50">Tus plantas favoritas, directo a tu hogar.</p>
+      <div class="small opacity-50 mt-3">
+        &copy; 2025 Herboli Naz.
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
